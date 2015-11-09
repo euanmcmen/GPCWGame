@@ -8,4 +8,5 @@ GameConstants.cpp
 
 int drawMode = 0;
 float rotationAngle = 0;
-
+bool shouldSpawnAsteroid = FALSE;
+int increment = 0;

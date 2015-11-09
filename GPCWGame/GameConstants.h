@@ -50,6 +50,7 @@ struct lightColour4
 
 extern int drawMode;
 extern float rotationAngle;
-
+extern bool shouldSpawnAsteroid;
+extern int increment;
 
 #endif

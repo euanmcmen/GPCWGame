@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsteroidSpawner.cpp" />
     <ClCompile Include="cColours.cpp" />
     <ClCompile Include="cCube.cpp" />
     <ClCompile Include="cFont.cpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsteroidSpawner.h" />
     <ClInclude Include="cColours.h" />
     <ClInclude Include="cCube.h" />
     <ClInclude Include="cFont.h" />

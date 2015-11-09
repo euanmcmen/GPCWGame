@@ -17,7 +17,7 @@
 #include "cLight.h"
 #include "cStarfield.h"
 #include "cFontMgr.h"
-
+#include "AsteroidSpawner.h"
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
@@ -43,13 +43,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	pgmWNDMgr->attachOGLWnd(&theOGLWnd);
 
 	//Create jupiter
-	cSphere jupiter(10, 100, 100);
+	cSphere jupiter(10, 50, 50);
+
+	//Create the asteroid spawner.
+	AsteroidSpawner aSpawner;
 
     //Attempt to create the window
 	if (!pgmWNDMgr->createWND(windowWidth, windowHeight, windowBPP))
     {
         //If it fails
-
         MessageBox(NULL, "Unable to create the OpenGL Window", "An error occurred", MB_ICONERROR | MB_OK);
 		pgmWNDMgr->destroyWND(); //Reset the display and exit
         return 1;
@@ -110,26 +112,43 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, -80.0f);
 
+		//Push the light matrix.
 		glPushMatrix();
 		theStarField.render(0.0f);
-
 		sunLight.lightOn();
-		
+
 		//Prepare and render Jupiter
 		glPushMatrix();
-
 		jupiter.setRotAngle(jupiter.getRotAngle() + (jupiterRotateSpeed * elapsedTime));
 		jupiter.prepare(jupiter.getRotAngle());
 		jupiterMaterial.useMaterial();
 		jupiter.render(jupiter.getRotAngle());
-
 		glPopMatrix();
 
+
+		//spawn an asteroid if one should exist.
+		if (shouldSpawnAsteroid)
+		{			
+			aSpawner.SpawnAsteroid(-10);
+			aSpawner.SpawnAsteroid(-6);
+			aSpawner.SpawnAsteroid(-2);	
+			aSpawner.SpawnAsteroid(2);
+			aSpawner.SpawnAsteroid(6);
+			aSpawner.SpawnAsteroid(10);
+
+		}
+
+		//Pop the light matrix.
+		glPopMatrix();
+
+		//Prepare and render the text.
 		glPushMatrix();
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-		theFontMgr->getFont("Space")->printText("Jupiter", FTPoint(10, 20, 0.0f));
+		theFontMgr->getFont("Space")->printText("Warning:  Asteroid Field.", FTPoint(10.0f, 20, 0.0f));
 		glPopMatrix();
+		
 
+		//Swap the buffers.
 		pgmWNDMgr->swapBuffers();
 
 	}
@@ -138,4 +157,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	pgmWNDMgr->destroyWND(); //Destroy the program window
 
     return 0; //Return success
+}
+
+void SpawnAsteroid()
+{
+	glPushMatrix();
 }

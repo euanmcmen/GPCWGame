@@ -12,6 +12,7 @@ cWNDManager.cpp
 #include "wglext.h"
 #include "windowOGL.h"
 #include "GameConstants.h"
+#include "AsteroidSpawner.h"
 
 cWNDManager* cWNDManager::pInstance = NULL;
 
@@ -82,7 +83,7 @@ bool cWNDManager::createWND(int width, int height, int bpp)
 	// class registered, so now create our window
 	m_hwnd = CreateWindowEx(NULL,                                 // extended style
 		"winOGL",                          // class name
-		"Sun, Moon and Earth",      // app name
+		"Asteroid Avoider",      // app name
 		WS_OVERLAPPEDWINDOW,	// the window style
 		CW_USEDEFAULT, // the starting x coordinate
 		CW_USEDEFAULT, // the starting y coordinate
@@ -263,6 +264,10 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		{
 			rotationAngle = rotationAngle - 5; //Decrease rotation Angle 
 			glRotatef(-rotationAngle, 0.0f, 1.0f, 0.0f);
+		}
+		if (wParam == VK_SPACE)
+		{
+			shouldSpawnAsteroid = TRUE;
 		}
 
 		break;

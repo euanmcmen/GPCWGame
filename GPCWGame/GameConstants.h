@@ -3,18 +3,7 @@
 
 #define GLM_FORCE_RADIANS
 //Define the string to appear in the top left corner of the window
-#define WINDOW_TITLE "OpenGl Earth & Moon"
-
-struct lightColour4
-{
-	lightColour4(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 0.0f) : r(_r), g(_g), b(_b), a(_a) {}
-
-	float r;	// Red
-	float g;	// Green
-	float b;	// Blue
-	float a;	// Alpha
-};
-
+#define WINDOW_TITLE "OpenGl Models - Tardis Wars"
 
 // Windows & OpenGL 
 #include <stdlib.h>
@@ -28,6 +17,9 @@ struct lightColour4
 #include "IL\il.h"
 #include "IL\ilu.h"
 #include "IL\ilut.h"
+
+// Model Loading Library
+#include "glm-0.3.2\glm\glm.h"
 
 // Font
 #include "FTGL\ftgl.h"
@@ -48,9 +40,36 @@ struct lightColour4
 // Textures
 #include "cTexture.h"
 
+struct lightColour4
+{
+	lightColour4(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 0.0f) : r(_r), g(_g), b(_b), a(_a) {}
+
+	float r;	// Red
+	float g;	// Green
+	float b;	// Blue
+	float a;	// Alpha
+};
+
+struct colour3f
+{
+	colour3f(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f) : r(_r), g(_g), b(_b) {}
+
+	float r;	// Red
+	float g;	// Green
+	float b;	// Blue
+};
+
+struct mdlDimensions{
+	float s_mdlWidth, s_mdlheight, s_mdldepth;
+};
+
+const float PLAYFIELDX = 100.0f;
+const float PLAYFIELDZ = 300.0f;
+
 extern int drawMode;
 extern float rotationAngle;
-extern bool shouldSpawnAsteroid;
-extern int increment;
+extern float translationX;
+extern bool fire;
+
 
 #endif

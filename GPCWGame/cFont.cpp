@@ -74,3 +74,15 @@ void cFont::printText(LPCSTR text, FTPoint textPos)
 
 	glPopMatrix();
 }
+
+void cFont::printText(LPCSTR text, FTPoint textPos, colour3f textColour)
+{
+	glPushMatrix();
+
+	glTranslatef(textPos.X(), textPos.Y(), 0);
+	glScalef(1, -1, 1);
+	glColor3f(textColour.r, textColour.g, textColour.b);
+	theFont->Render(text);
+
+	glPopMatrix();
+}

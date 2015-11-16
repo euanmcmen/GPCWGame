@@ -12,7 +12,6 @@ cWNDManager.cpp
 #include "wglext.h"
 #include "windowOGL.h"
 #include "GameConstants.h"
-#include "AsteroidSpawner.h"
 
 cWNDManager* cWNDManager::pInstance = NULL;
 
@@ -83,7 +82,7 @@ bool cWNDManager::createWND(int width, int height, int bpp)
 	// class registered, so now create our window
 	m_hwnd = CreateWindowEx(NULL,                                 // extended style
 		"winOGL",                          // class name
-		"Asteroid Avoider",      // app name
+		WINDOW_TITLE,      // app name
 		WS_OVERLAPPEDWINDOW,	// the window style
 		CW_USEDEFAULT, // the starting x coordinate
 		CW_USEDEFAULT, // the starting y coordinate
@@ -103,7 +102,7 @@ bool cWNDManager::createWND(int width, int height, int bpp)
 	ShowWindow(m_hwnd, SW_SHOW);          // display the window
 	UpdateWindow(m_hwnd);                 // update the window
 
-	m_lastTime = GetTickCount64() / 1000.0f; //Initialize the time
+	m_lastTime = GetTickCount() / 1000.0f; //Initialize the time
 	return true;
 }
 
@@ -117,9 +116,24 @@ void cWNDManager::attachOGLWnd(windowOGL* OGLWindow)
 	m_winOGL = OGLWindow;
 }
 
+void cWNDManager::attachInputMgr(cInputMgr* inputMgr)
+{
+	m_InputMgr = inputMgr;
+}
+
 bool cWNDManager::isWNDRunning()
 {
 	return m_isRunning;
+}
+
+HWND cWNDManager::getWNDHandle()               // Return window handle.
+{
+	return m_hwnd;
+}
+
+HDC cWNDManager::getWNDDC()
+{
+	return m_hdc;
 }
 
 void cWNDManager::processWNDEvents()
@@ -225,50 +239,14 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	}
 		break;
 	case WM_KEYDOWN:
+	{
 		if (wParam == VK_ESCAPE) //If the escape key was pressed
 		{
 			DestroyWindow(pInstance->m_hwnd); //Send a WM_DESTROY message
 		}
-
-		// Lab Code goes here
-
-		if (wParam == 'd' || wParam == 'D') //If d or D was pressed 
-		{
-			drawMode = ++drawMode % 3;
-			if (drawMode == 0) // fill mode 
-			{
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				glEnable(GL_DEPTH_TEST);
-				glEnable(GL_CULL_FACE);
-			}
-			else if (drawMode == 1) // wireframe mode 
-			{
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				glDisable(GL_DEPTH_TEST);
-				glDisable(GL_CULL_FACE);
-			}
-			else // point mode 
-			{
-				glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-				glDisable(GL_DEPTH_TEST);
-				glDisable(GL_CULL_FACE);
-			}
-			break;
-		}
-		if (wParam == VK_LEFT) //If the Left Arrow key was pressed 
-		{
-			rotationAngle = rotationAngle + 5; //Increase rotation Angle 
-			glRotatef(rotationAngle, 0.0f, 1.0f, 0.0f);
-		}
-		if (wParam == VK_RIGHT) //If the Left Arrow key was pressed 
-		{
-			rotationAngle = rotationAngle - 5; //Decrease rotation Angle 
-			glRotatef(-rotationAngle, 0.0f, 1.0f, 0.0f);
-		}
-		if (wParam == VK_SPACE)
-		{
-			shouldSpawnAsteroid = TRUE;
-		}
+		pInstance->m_InputMgr->keyDown(wParam);
+		return 0;
+	}
 
 		break;
 	default:
@@ -286,7 +264,7 @@ windowOGL*  cWNDManager::getAttachedWND()
 
 float cWNDManager::getElapsedSeconds()
 {
-	float currentTime = float(GetTickCount64()) / 1000.0f;
+	float currentTime = float(GetTickCount()) / 1000.0f;
 	float seconds = float(currentTime - m_lastTime);
 	m_lastTime = currentTime;
 	return seconds;

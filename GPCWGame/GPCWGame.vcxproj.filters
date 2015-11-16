@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cColours.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,9 +28,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cMaterial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cPyramid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cShapes.cpp">
@@ -66,11 +60,26 @@
     <ClCompile Include="AsteroidSpawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cInputMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cModelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Asteroid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cColours.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cCube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cPyramid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cShapes.h">
@@ -119,6 +125,24 @@
     <ClInclude Include="AsteroidSpawner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cInputMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cModelLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Asteroid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\DevIL.lib" />
@@ -126,5 +150,7 @@
     <Library Include="Libraries\ftgl.lib" />
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
+    <Library Include="Libraries\glm-0.3.2Lib.lib" />
+    <Library Include="Libraries\OpenAL32.lib" />
   </ItemGroup>
 </Project>

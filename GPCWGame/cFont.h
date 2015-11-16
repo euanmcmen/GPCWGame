@@ -24,6 +24,7 @@ public:
 	~cFont();
 	FTFont* getFont();
 	void printText(LPCSTR text, FTPoint textPos);
+	void printText(LPCSTR text, FTPoint textPos, colour3f textColour);
 
 };
 #endif

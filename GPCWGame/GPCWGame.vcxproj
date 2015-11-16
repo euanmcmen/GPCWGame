@@ -64,14 +64,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="AsteroidSpawner.cpp" />
-    <ClCompile Include="cColours.cpp" />
+    <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCube.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cFontMgr.cpp" />
+    <ClCompile Include="cInputMgr.cpp" />
     <ClCompile Include="cLight.cpp" />
     <ClCompile Include="cMaterial.cpp" />
-    <ClCompile Include="cPyramid.cpp" />
+    <ClCompile Include="cModel.cpp" />
+    <ClCompile Include="cModelLoader.cpp" />
+    <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cShapes.cpp" />
     <ClCompile Include="cSphere.cpp" />
     <ClCompile Include="cStarfield.cpp" />
@@ -83,14 +87,18 @@
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
     <ClInclude Include="AsteroidSpawner.h" />
-    <ClInclude Include="cColours.h" />
+    <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCube.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cFontMgr.h" />
+    <ClInclude Include="cInputMgr.h" />
     <ClInclude Include="cLight.h" />
     <ClInclude Include="cMaterial.h" />
-    <ClInclude Include="cPyramid.h" />
+    <ClInclude Include="cModel.h" />
+    <ClInclude Include="cModelLoader.h" />
+    <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cShapes.h" />
     <ClInclude Include="cSphere.h" />
     <ClInclude Include="cStarfield.h" />
@@ -105,8 +113,10 @@
     <Library Include="Libraries\DevIL.lib" />
     <Library Include="Libraries\freeglut.lib" />
     <Library Include="Libraries\ftgl.lib" />
+    <Library Include="Libraries\glm-0.3.2Lib.lib" />
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
+    <Library Include="Libraries\OpenAL32.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

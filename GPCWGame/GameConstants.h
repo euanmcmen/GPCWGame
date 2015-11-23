@@ -21,8 +21,14 @@
 // Model Loading Library
 #include "glm-0.3.2\glm\glm.h"
 
+
 // Font
 #include "FTGL\ftgl.h"
+
+// Audio
+#include "OpenAL\al.h"
+#include "OpenAL\alc.h"
+#include "OpenAL\alut.h"
 
 // Maths functions
 #include "glm\glm.hpp"
@@ -63,12 +69,23 @@ struct mdlDimensions{
 	float s_mdlWidth, s_mdlheight, s_mdldepth;
 };
 
-const float PLAYFIELDX = 100.0f;
-const float PLAYFIELDZ = 300.0f;
+//Player bounds within the screen.
+const float PLAYER_MAX_X = 7;
+const float PLAYER_MIN_X = -7;
+
+//For some reason, the enemies spawn differently from the player.
+const float ENEMY_MAX_X = 14;
+const float ENEMY_MIN_X = 0;
+const float ENEMY_MAX_Y = 5;
+const float ENEMY_MIN_Y = -5;
+//const float PLAYFIELDZ = 100.0f;
+
+extern bool playerHit;
 
 extern int drawMode;
 extern float rotationAngle;
 extern float translationX;
+extern float translationY;
 extern bool fire;
 
 

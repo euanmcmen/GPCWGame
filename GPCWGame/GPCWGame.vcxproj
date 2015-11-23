@@ -67,16 +67,22 @@
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="AsteroidSpawner.cpp" />
     <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cColours.cpp" />
     <ClCompile Include="cCube.cpp" />
+    <ClCompile Include="cEnemy.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cFontMgr.cpp" />
     <ClCompile Include="cInputMgr.cpp" />
+    <ClCompile Include="cLaser.cpp" />
     <ClCompile Include="cLight.cpp" />
     <ClCompile Include="cMaterial.cpp" />
     <ClCompile Include="cModel.cpp" />
     <ClCompile Include="cModelLoader.cpp" />
     <ClCompile Include="cPlayer.cpp" />
+    <ClCompile Include="cPyramid.cpp" />
     <ClCompile Include="cShapes.cpp" />
+    <ClCompile Include="cSound.cpp" />
+    <ClCompile Include="cSoundMgr.cpp" />
     <ClCompile Include="cSphere.cpp" />
     <ClCompile Include="cStarfield.cpp" />
     <ClCompile Include="cTexture.cpp" />
@@ -84,32 +90,41 @@
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="GameConstants.cpp" />
     <ClCompile Include="Studentmain.cpp" />
+    <ClCompile Include="tardisWarsGame.cpp" />
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="AsteroidSpawner.h" />
     <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cColours.h" />
     <ClInclude Include="cCube.h" />
+    <ClInclude Include="cEnemy.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cFontMgr.h" />
     <ClInclude Include="cInputMgr.h" />
+    <ClInclude Include="cLaser.h" />
     <ClInclude Include="cLight.h" />
     <ClInclude Include="cMaterial.h" />
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cModelLoader.h" />
     <ClInclude Include="cPlayer.h" />
+    <ClInclude Include="cPyramid.h" />
     <ClInclude Include="cShapes.h" />
+    <ClInclude Include="cSound.h" />
+    <ClInclude Include="cSoundMgr.h" />
     <ClInclude Include="cSphere.h" />
     <ClInclude Include="cStarfield.h" />
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cTriangle.h" />
     <ClInclude Include="cWNDManager.h" />
     <ClInclude Include="GameConstants.h" />
+    <ClInclude Include="tardisWarsGame.h" />
     <ClInclude Include="wglext.h" />
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="Libraries\alut.lib" />
     <Library Include="Libraries\DevIL.lib" />
     <Library Include="Libraries\freeglut.lib" />
     <Library Include="Libraries\ftgl.lib" />

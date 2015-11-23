@@ -1,0 +1,93 @@
+﻿Build started 23/11/2015 16:41:06.
+     1>Project "C:\Users\emcmen200\Desktop\GPCW-New\GPCW-Template\GPCW-Template.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (GPCW-Template.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt GameConstants.cpp Studentmain.cpp cCamera.cpp cColours.cpp cCube.cpp cEnemy.cpp cFont.cpp cFontMgr.cpp cInputMgr.cpp cLaser.cpp cLight.cpp cMaterial.cpp cModel.cpp cModelLoader.cpp cPlayer.cpp cPyramid.cpp cShapes.cpp cSound.cpp cSoundMgr.cpp cSphere.cpp cStarfield.cpp cTexture.cpp cTriangle.cpp cWNDManager.cpp tardisWarsGame.cpp windowOGL.cpp
+         GameConstants.cpp
+         Generating Code...
+         Compiling...
+         tardisWarsGame.cpp
+         cWNDManager.cpp
+         cTexture.cpp
+         cStarfield.cpp
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(52): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(89): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(93): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(97): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(101): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(105): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cstarfield.cpp(109): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+         cSphere.cpp
+         cSoundMgr.cpp
+         cSound.cpp
+         cShapes.cpp
+         cPyramid.cpp
+         cPlayer.cpp
+         cModelLoader.cpp
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cmodelloader.cpp(36): warning C4244: '=' : conversion from 'GLsizei' to 'GLfloat', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cmodelloader.cpp(37): warning C4244: '=' : conversion from 'GLsizei' to 'GLfloat', possible loss of data
+         cModel.cpp
+         cMaterial.cpp
+         cLight.cpp
+         cLaser.cpp
+         cInputMgr.cpp
+         cFontMgr.cpp
+         cFont.cpp
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cfont.cpp(69): warning C4244: 'argument' : conversion from 'FTGL_DOUBLE' to 'GLfloat', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\cfont.cpp(82): warning C4244: 'argument' : conversion from 'FTGL_DOUBLE' to 'GLfloat', possible loss of data
+         cEnemy.cpp
+         cCube.cpp
+         Generating Code...
+         Compiling...
+         cCamera.cpp
+         Studentmain.cpp
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\studentmain.cpp(108): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\studentmain.cpp(132): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\studentmain.cpp(166): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+     1>c:\users\emcmen200\desktop\gpcw-new\gpcw-template\studentmain.cpp(166): warning C4309: 'argument' : truncation of constant value
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         windowOGL.cpp
+         cTriangle.cpp
+         cColours.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\emcmen200\Desktop\GPCW-New\Debug\GPCW-New.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\emcmen200\Desktop\GPCW-New\Debug\GPCW-New.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\emcmen200\Desktop\GPCW-New\Debug\GPCW-New.lib" /MACHINE:X86 Debug\cCamera.obj
+         Debug\cColours.obj
+         Debug\cCube.obj
+         Debug\cEnemy.obj
+         Debug\cFont.obj
+         Debug\cFontMgr.obj
+         Debug\cInputMgr.obj
+         Debug\cLaser.obj
+         Debug\cLight.obj
+         Debug\cMaterial.obj
+         Debug\cModel.obj
+         Debug\cModelLoader.obj
+         Debug\cPlayer.obj
+         Debug\cPyramid.obj
+         Debug\cShapes.obj
+         Debug\cSound.obj
+         Debug\cSoundMgr.obj
+         Debug\cSphere.obj
+         Debug\cStarfield.obj
+         Debug\cTexture.obj
+         Debug\cTriangle.obj
+         Debug\cWNDManager.obj
+         Debug\GameConstants.obj
+         Debug\Studentmain.obj
+         Debug\tardisWarsGame.obj
+         Debug\windowOGL.obj
+         Libraries\alut.lib
+         Libraries\DevIL.lib
+         Libraries\freeglut.lib
+         Libraries\ftgl.lib
+         "Libraries\glm-0.3.2Lib.lib"
+         Libraries\ILU.lib
+         Libraries\ILUT.lib
+         Libraries\OpenAL32.lib
+         GPCW-Template.vcxproj -> C:\Users\emcmen200\Desktop\GPCW-New\Debug\GPCW-New.exe
+     1>Done Building Project "C:\Users\emcmen200\Desktop\GPCW-New\GPCW-Template\GPCW-Template.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:22.37

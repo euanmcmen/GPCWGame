@@ -126,17 +126,17 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		glPopMatrix();
 
 
-		//spawn an asteroid if one should exist.
-		if (shouldSpawnAsteroid)
-		{			
-			aSpawner.SpawnAsteroid(-10);
-			aSpawner.SpawnAsteroid(-6);
-			aSpawner.SpawnAsteroid(-2);	
-			aSpawner.SpawnAsteroid(2);
-			aSpawner.SpawnAsteroid(6);
-			aSpawner.SpawnAsteroid(10);
+		////spawn an asteroid if one should exist.
+		//if (shouldSpawnAsteroid)
+		//{			
+		//	aSpawner.SpawnAsteroid(-10);
+		//	aSpawner.SpawnAsteroid(-6);
+		//	aSpawner.SpawnAsteroid(-2);	
+		//	aSpawner.SpawnAsteroid(2);
+		//	aSpawner.SpawnAsteroid(6);
+		//	aSpawner.SpawnAsteroid(10);
 
-		}
+		//}
 
 		//Pop the light matrix.
 		glPopMatrix();

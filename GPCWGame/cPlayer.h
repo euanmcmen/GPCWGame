@@ -2,6 +2,7 @@
 #define _CPLAYER_H
 
 #include "GameConstants.h"
+#include "tardisWarsGame.h"
 #include "cModel.h"
 #include "cInputMgr.h"
 

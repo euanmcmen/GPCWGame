@@ -1,5 +1,4 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (GP3CWGame.vcxproj, Lab 6.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Studentmain.cpp
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(88): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(104): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+﻿  Studentmain.cpp
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(108): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(132): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
   GPCWGame.vcxproj -> E:\Documents\Github\GPCWGame\Debug\GPCWGame.exe

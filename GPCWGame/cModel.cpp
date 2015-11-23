@@ -4,6 +4,7 @@ cModel::cModel()
 {
 	m_mdlPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_mdlRotation = 0.0f;
+	m_axis = glm::vec3(0, 0, 0);
 	m_mdlDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_mdlSpeed = 0.0f;
 	m_IsActive = false;
@@ -27,6 +28,11 @@ void cModel::setPosition(glm::vec3 mdlPosition)
 void cModel::setRotation(GLfloat mdlRotation)
 {
 	m_mdlRotation = mdlRotation;
+}
+
+void cModel::setAxis(glm::vec3 axis)
+{
+	m_axis = axis;
 }
 
 void cModel::setDirection(glm::vec3 mdlDirection)
@@ -74,6 +80,11 @@ GLfloat cModel::getRotation()
 	return m_mdlRotation;
 }
 
+glm::vec3 cModel::getAxis()
+{
+	return m_axis;
+}
+
 glm::vec3 cModel::getDirection()
 {
 	return m_mdlDirection;
@@ -109,10 +120,11 @@ void cModel::setTextureID(GLuint theTextureID)
 	m_TextureID = theTextureID;
 }
 
-void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 mdlScale, glm::vec3 mdlDirection, float mdlSpeed, bool mdlIsActive)
+void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 axis, glm::vec3 mdlScale, glm::vec3 mdlDirection, float mdlSpeed, bool mdlIsActive)
 {
 	setPosition(mdlPosition);
 	setRotation(mdlRotation);
+	setAxis(axis);
 	setScale(mdlScale);
 	setDirection(mdlDirection);
 	setSpeed(mdlSpeed);
@@ -123,7 +135,7 @@ void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 md
 	m_mdlRadius = m_Dimensions.s_mdldepth / 2;
 	glm::vec3 mdlPos = getPosition();
 	GLfloat mdlRot = getRotation();
-	glRotatef(mdlRot, 0.0f, 1.0f, 0.0f);
+	glRotatef(mdlRot, axis.x, axis.y, axis.z);
 	glTranslatef(mdlPos.x,mdlPos.y,mdlPos.z);
 }
 
@@ -143,6 +155,25 @@ bool cModel::SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius)
 float cModel::lengthSQRD(glm::vec3 mdlLength)
 {
 	return (mdlLength.x * mdlLength.x) + (mdlLength.y * mdlLength.y) + (mdlLength.z * mdlLength.z);
+}
+
+/*
+=================================================================
+Attach the input manager to the sprite
+=================================================================
+*/
+void cModel::attachInputMgr(cInputMgr* inputMgr)
+{
+	m_InputMgr = inputMgr;
+}
+/*
+=================================================================
+Attach the sound manager to the sprite
+=================================================================
+*/
+void cModel::attachSoundMgr(cSoundMgr* soundMgr)
+{
+	m_SoundMgr = soundMgr;
 }
 
 cModel::~cModel()

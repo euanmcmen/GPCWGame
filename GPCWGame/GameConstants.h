@@ -72,6 +72,8 @@ struct mdlDimensions{
 //Player bounds within the screen.
 const float PLAYER_MAX_X = 7;
 const float PLAYER_MIN_X = -7;
+const float PLAYER_MAX_Y = 5;
+const float PLAYER_MIN_Y = -5;
 
 //For some reason, the enemies spawn differently from the player.
 const float ENEMY_MAX_X = 14;

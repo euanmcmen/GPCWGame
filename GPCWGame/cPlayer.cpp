@@ -26,34 +26,31 @@ void cPlayer::update(float elapsedTime)
 	}
 	if (m_InputMgr->isKeyDown(VK_UP))
 	{
-		translationY = 1;
+		if (m_mdlPosition.y < PLAYER_MAX_X)
+			translationY = 1;
 	}
 	if (m_InputMgr->isKeyDown(VK_DOWN))
 	{
+		if (m_mdlPosition.y > PLAYER_MIN_Y)
 		translationY = -1;
 	}
 
 	if (m_InputMgr->isKeyDown(VK_SPACE))
 	{
-		
-		//glm::vec3 mdlLaserDirection;
-		//mdlLaserDirection.x = -(float)glm::sin(glm::radians(this->getRotation()));
-		//mdlLaserDirection.y = 0.0f;
-		//mdlLaserDirection.z = (float)glm::cos(glm::radians(this->getRotation()));
-		//mdlLaserDirection *= -1;
 
-		//// Add new bullet sprite to the vector array
-		//theTardisLasers.push_back(new cLaser);
-		//int numLasers = theTardisLasers.size() - 1;
-		//theTardisLasers[numLasers]->setDirection(mdlLaserDirection);
-		//theTardisLasers[numLasers]->setRotation(0.0f);
-		//theTardisLasers[numLasers]->setScale(glm::vec3(1, 1, 1));
-		//theTardisLasers[numLasers]->setSpeed(5.0f);
-		//theTardisLasers[numLasers]->setPosition(this->getPosition() + mdlLaserDirection);
-		//theTardisLasers[numLasers]->setIsActive(true);
-		////theTardisLasers[numLasers]->setMdlDimensions(theLaser.getModelDimensions());
-		//theTardisLasers[numLasers]->update(elapsedTime);
-		//// play the firing sound
+		// Add new bullet sprite to the vector array
+		theTardisLasers.push_back(new cLaser);
+		int numLasers = theTardisLasers.size() - 1;
+		theTardisLasers[numLasers]->setDirection(glm::vec3(0,0,0));
+		theTardisLasers[numLasers]->setRotation(0.0f);
+		theTardisLasers[numLasers]->setAxis(glm::vec3(0, 0, 0));
+		theTardisLasers[numLasers]->setScale(glm::vec3(1, 1, 1));
+		theTardisLasers[numLasers]->setSpeed(5.0f);
+		theTardisLasers[numLasers]->setPosition(this->getPosition() + glm::vec3(0,0,2));
+		theTardisLasers[numLasers]->setIsActive(true);
+		//theTardisLasers[numLasers]->setMdlDimensions(theLaser.getModelDimensions());
+		theTardisLasers[numLasers]->update(elapsedTime);
+		// play the firing sound
 		//m_SoundMgr->getSnd("Shot")->playAudio(AL_TRUE);
 	}
 

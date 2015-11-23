@@ -1,4 +1,2 @@
-﻿  Studentmain.cpp
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(108): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(132): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+﻿  cPlayer.cpp
   GPCWGame.vcxproj -> E:\Documents\Github\GPCWGame\Debug\GPCWGame.exe

@@ -35,24 +35,24 @@ void cPlayer::update(float elapsedTime)
 			translationY = -1;
 	}
 
-	if (m_InputMgr->isKeyDown(VK_SPACE))
-	{
+	//if (m_InputMgr->isKeyDown(VK_SPACE))
+	//{
 
-		//// Add new bullet sprite to the vector array
-		//theTardisLasers.push_back(new cLaser);
-		//int numLasers = theTardisLasers.size() - 1;
-		//theTardisLasers[numLasers]->setDirection(glm::vec3(0,0,0));
-		//theTardisLasers[numLasers]->setRotation(0.0f);
-		//theTardisLasers[numLasers]->setAxis(glm::vec3(0, 0, 0));
-		//theTardisLasers[numLasers]->setScale(glm::vec3(1, 1, 1));
-		//theTardisLasers[numLasers]->setSpeed(5.0f);
-		//theTardisLasers[numLasers]->setPosition(this->getPosition() + glm::vec3(0,0,2));
-		//theTardisLasers[numLasers]->setIsActive(true);
-		////theTardisLasers[numLasers]->setMdlDimensions(theLaser.getModelDimensions());
-		//theTardisLasers[numLasers]->update(elapsedTime);
-		//// play the firing sound
-		////m_SoundMgr->getSnd("Shot")->playAudio(AL_TRUE);
-	}
+	//	//// Add new bullet sprite to the vector array
+	//	//theTardisLasers.push_back(new cLaser);
+	//	//int numLasers = theTardisLasers.size() - 1;
+	//	//theTardisLasers[numLasers]->setDirection(glm::vec3(0,0,0));
+	//	//theTardisLasers[numLasers]->setRotation(0.0f);
+	//	//theTardisLasers[numLasers]->setAxis(glm::vec3(0, 0, 0));
+	//	//theTardisLasers[numLasers]->setScale(glm::vec3(1, 1, 1));
+	//	//theTardisLasers[numLasers]->setSpeed(5.0f);
+	//	//theTardisLasers[numLasers]->setPosition(this->getPosition() + glm::vec3(0,0,2));
+	//	//theTardisLasers[numLasers]->setIsActive(true);
+	//	////theTardisLasers[numLasers]->setMdlDimensions(theLaser.getModelDimensions());
+	//	//theTardisLasers[numLasers]->update(elapsedTime);
+	//	//// play the firing sound
+	//	////m_SoundMgr->getSnd("Shot")->playAudio(AL_TRUE);
+	//}
 
 	/*
 	==============================================================
@@ -101,28 +101,28 @@ void cPlayer::update(float elapsedTime)
 	//	}
 	//}
 
-	vector<cEnemy*>::iterator enemyIterator = theEnemy.begin();
-	while (enemyIterator != theEnemy.end())
-	{
-		if ((*enemyIterator)->isActive() && !isPlayerHit)
-		{
-			//Check if player is colliding with the enemy.
-			if (SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius()))
-			{
-				//Disable player.
-				isPlayerHit = true;
+	//vector<cEnemy*>::iterator enemyIterator = theEnemy.begin();
+	//while (enemyIterator != theEnemy.end())
+	//{
+	//	if ((*enemyIterator)->isActive())
+	//	{
+	//		//Check if player is colliding with the enemy.
+	//		if (SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius()))
+	//		{
+	//			//Disable player.
+	//			isPlayerHit = true;
 
-				//Disable this enemy.
-				//enemyIterator = theEnemy.erase(enemyIterator);
-				//(*enemyIterator)->setIsActive(false);
-				
-			}
-			else
-			{
-				++enemyIterator;
-			}
-		}
-	}
+	//			//Disable this enemy.
+	//			//enemyIterator = theEnemy.erase(enemyIterator);
+	//			//(*enemyIterator)->setIsActive(false);
+	//			
+	//		}
+	//		else
+	//		{
+	//			++enemyIterator;
+	//		}
+	//	}
+	//}
 
 	// Find out what direction we should be thrusting.
 	//Create our velocity vector.

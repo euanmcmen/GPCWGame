@@ -141,15 +141,11 @@ void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 ax
 
 bool cModel::SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius)
 {
-	const float distSq = lengthSQRD(m_mdlPosition - mdlPosition);
+	const float distSq = lengthSQRD(mdlPosition - m_mdlPosition);
 
 	const float sumRadius = (m_mdlRadius + mdlRadius);
 
-	if (distSq < sumRadius * sumRadius)
-	{
-		return true; // Collision
-	}
-	return false; // No Collision
+	return (sqrt(distSq) < (sumRadius * sumRadius));
 }
 
 float cModel::lengthSQRD(glm::vec3 mdlLength)

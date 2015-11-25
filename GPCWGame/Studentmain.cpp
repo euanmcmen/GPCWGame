@@ -3,7 +3,6 @@
 
 #define GLX_GLXEXT_LEGACY //Must be declared so that our local glxext.h is picked up, rather than the system one
 
-
 //#include <windows.h>
 #include "GameConstants.h"
 #include "windowOGL.h"
@@ -142,13 +141,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theLaser.loadModel("Models/laser.obj", laserTexture);
 
 	//Set enemy spawn values.
-	int enemySpawnInterval = 1;
-	int enemySpawnAt = 1;
+	float enemySpawnInterval = 2.0f;
+	float enemySpawnAt = 1.0f;
 	int enemyIndex = 0;
+	int collisionIndex = 0;
 
 	//Set up player.
 	cPlayer thePlayer;
-	thePlayer.initialise(glm::vec3(0, 0, 0), 0, glm::vec3(1,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
+	thePlayer.initialise(glm::vec3(0, 0, 0), 0.0f, glm::vec3(0,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
 	thePlayer.setMdlDimensions(tardisMdl.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
 	thePlayer.attachSoundMgr(theSoundMgr);
@@ -205,23 +205,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				//if the enemy is active, update and render it.
 				spaceShipMdl.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
 				(*enemyIterator)->update(elapsedTime);
+
+				//Check if player is colliding with the player.
+				if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
+				{
+					//Set player hit
+					isPlayerHit = true;
+				}
+
+				//If the enemy goes into the killzone, set it to inactive.
+				if ((*enemyIterator)->isInKillzone())
+				{
+					//Disable the enemy so it isn't rendererd or updated.
+					(*enemyIterator)->setIsActive(false);
+				}
 			}
 			else
 			{
 				//enemyIterator = theEnemy.erase(enemyIterator);
 			}
-
-			//If the enemy goes into the killzone, set it to inactive.
-			//if ((*enemyIterator)->isInKillzone())
-			//{
-			//	if (enemyIterator != theEnemy.end() && (*enemyIterator)->isActive())
-			//	{
-			//		//enemyIterator = theEnemy.erase(enemyIterator);
-			//		(*enemyIterator)->setIsActive(false);
-			//	}
-			//	enemyIterator = theEnemy.erase(enemyIterator);
-			//	enemyIterator = theEnemy.erase(remove(theEnemy.begin(), theEnemy.end(), (*enemyIterator)));
-			//}
 		}
 
 		//Update the player if it hasn't been hit.
@@ -252,7 +254,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			playerDestroyedMessage = "";
 
 			//Set the next enemy spawn to be <interval> seconds after elapsed time.
-			enemySpawnAt = elapsedTime + enemySpawnInterval;
+			enemySpawnAt = enemySpawnInterval;
+
+			//reset the counter.
+			runTime = 0;
 			
 			//Unset the flag.
 			isRestarting = false;
@@ -269,7 +274,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			}
 		}
 
-		outputMsg = to_string(theEnemy.size()); // convert float to string		
+		outputMsg = to_string(collisionIndex);
+		//outputMsg = to_string(theEnemy.size()); // convert float to string		
 		//outputMsg = to_string(floorf(runTime));
 		
 		glPushMatrix();
@@ -281,11 +287,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 		pgmWNDMgr->swapBuffers();
 
-		runTime += elapsedTime;
+		if (!isPlayerHit)
+			runTime += elapsedTime;
 
 		//Clear key buffers
 		theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
-
 	}
 
 	theOGLWnd.shutdown(); //Free any resources
@@ -297,17 +303,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 void SpawnEnemy(cModelLoader* enemyLoader)
 {
 	//Create new enemy.
-	cEnemy* newEnemy = new cEnemy();
+	theEnemy.push_back(new cEnemy);
 
-	newEnemy->spawn();
-	newEnemy->setMdlDimensions(enemyLoader->getModelDimensions());
-	newEnemy->setScale(glm::vec3(5, 5, 5));
-	theEnemy.push_back(newEnemy);
-
-	//theEnemy.push_back(new cEnemy);
-	//theEnemy[*index]->spawn();
-	//theEnemy[*index]->setMdlDimensions(enemyLoader->getModelDimensions());
-	//theEnemy[*index]->setScale(glm::vec3(5, 5, 5));
+	//Get the reference of this new enemy.  It'll be at the back of the vector.
+	theEnemy.back()->spawn();
+	theEnemy.back()->setMdlDimensions(enemyLoader->getModelDimensions());
 
 	return;
 }

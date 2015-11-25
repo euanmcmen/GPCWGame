@@ -6,9 +6,11 @@ GameConstants.cpp
 
 #include "GameConstants.h"
 
+//Game variables.
 int drawMode = 0;
 float rotationAngle = 0;
 float translationX = 0;
 float translationY = 0;
-bool playerHit = false;
+bool isPlayerHit = false;
+bool isRestarting = false;
 bool fire = false;

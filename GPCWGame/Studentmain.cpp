@@ -25,20 +25,17 @@
 #include "cPlayer.h"
 #include "cEnemy.h"
 #include "cLaser.h"
-#include "tardisWarsGame.h"
+//#include "tardisWarsGame.h"
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR cmdLine,
-                   int cmdShow)
+//Forward declare methods.
+void SpawnEnemy(cModelLoader* enemyLoader);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
-
     //Set our window settings
     const int windowWidth = 1024;
     const int windowHeight = 768;
     const int windowBPP = 16;
-
-
 
     //This is our window
 	static cWNDManager* pgmWNDMgr = cWNDManager::getInstance();
@@ -61,12 +58,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// Attach the keyboard manager
 	pgmWNDMgr->attachInputMgr(theInputMgr);
 
-
     //Attempt to create the window
 	if (!pgmWNDMgr->createWND(windowWidth, windowHeight, windowBPP))
     {
         //If it fails
-
         MessageBox(NULL, "Unable to create the OpenGL Window", "An error occurred", MB_ICONERROR | MB_OK);
 		pgmWNDMgr->destroyWND(); //Reset the display and exit
         return 1;
@@ -146,32 +141,24 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	cModelLoader theLaser;
 	theLaser.loadModel("Models/laser.obj", laserTexture);
 
-	for (int loop = 0; loop < 25; loop++)
-	{
-		theEnemy.push_back(new cEnemy);
-		theEnemy[loop]->spawn();
-		theEnemy[loop]->setMdlDimensions(spaceShipMdl.getModelDimensions());
-		theEnemy[loop]->setScale(glm::vec3(5, 5, 5));
-	}
+	//Set enemy spawn values.
+	int enemySpawnInterval = 1;
+	int enemySpawnAt = 1;
+	int enemyIndex = 0;
 
+	//Set up player.
 	cPlayer thePlayer;
-	thePlayer.initialise(glm::vec3(0, 0, 0), 90, glm::vec3(1,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
+	thePlayer.initialise(glm::vec3(0, 0, 0), 0, glm::vec3(1,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
 	thePlayer.setMdlDimensions(tardisMdl.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
 	thePlayer.attachSoundMgr(theSoundMgr);
 
-	//Enemy index
-	int enemyIndex = 0;
-
-	float tCount = 0.0f;
+	float runTime = 0.0f;
 	string outputMsg;
 	string playerDestroyedMessage;
 
 	//Play background music.
 	//theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
-
-	std::vector<cLaser*> laserList;
-	std::vector<cLaser*>::iterator index;
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -196,29 +183,80 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		rfLight.lightOn();
 		cbLight.lightOn();
 
-		////Spawn a new enemy if the time is divisible by 5
-		//if ((int)(elapsedTime) % 50 == 0)
-		//{
-		//		theEnemy.push_back(new cEnemy);
-		//		theEnemy[enemyIndex]->spawn();
-		//		theEnemy[enemyIndex]->setMdlDimensions(spaceShipMdl.getModelDimensions());
-		//		theEnemy[enemyIndex]->setScale(glm::vec3(5, 5, 5));
-		//		enemyIndex++;
-		//}
+		//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
+		if (runTime > enemySpawnAt)
+		{
+			//Spawn an enemy, referencing the index and the enemy model.
+			//Use & to pass a pointer to the value, rather than the value itself.
+			SpawnEnemy(&spaceShipMdl);
+
+			//Increment enemy spawn index.
+			enemyIndex++;
+
+			//Increase enemySpawnAt
+			enemySpawnAt += enemySpawnInterval;
+		}
 
 		//Iterate over each enemy.
 		for (vector<cEnemy*>::iterator enemyIterator = theEnemy.begin(); enemyIterator != theEnemy.end(); ++enemyIterator)
 		{
 			if ((*enemyIterator)->isActive())
 			{
+				//if the enemy is active, update and render it.
 				spaceShipMdl.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
 				(*enemyIterator)->update(elapsedTime);
 			}
+			else
+			{
+				//enemyIterator = theEnemy.erase(enemyIterator);
+			}
+
+			//If the enemy goes into the killzone, set it to inactive.
+			//if ((*enemyIterator)->isInKillzone())
+			//{
+			//	if (enemyIterator != theEnemy.end() && (*enemyIterator)->isActive())
+			//	{
+			//		//enemyIterator = theEnemy.erase(enemyIterator);
+			//		(*enemyIterator)->setIsActive(false);
+			//	}
+			//	enemyIterator = theEnemy.erase(enemyIterator);
+			//	enemyIterator = theEnemy.erase(remove(theEnemy.begin(), theEnemy.end(), (*enemyIterator)));
+			//}
 		}
 
-		//Update the player.
-		tardisMdl.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
-		thePlayer.update(elapsedTime);
+		//Update the player if it hasn't been hit.
+		if (!isPlayerHit)
+		{
+			tardisMdl.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
+			thePlayer.update(elapsedTime);
+		}
+		else
+		{
+			//Set destroyed message.
+			playerDestroyedMessage = "Player destroyed.  Press Return to restart.";
+
+			//Delete all enemies.
+			theEnemy.clear();
+
+			//Check for return key press.
+			thePlayer.checkForRestart();
+		}
+
+		//If the restart button is pressed, spawn the enemies again.
+		if (isRestarting)
+		{
+			//Set the player hit status to false.
+			isPlayerHit = false;
+
+			//Clear the destroyed message.
+			playerDestroyedMessage = "";
+
+			//Set the next enemy spawn to be <interval> seconds after elapsed time.
+			enemySpawnAt = elapsedTime + enemySpawnInterval;
+			
+			//Unset the flag.
+			isRestarting = false;
+		}
 		
 		//Iterate for each laser.
 		//This will probably be removed as shooting will not exist in this game.
@@ -231,24 +269,19 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			}
 		}
 
-		outputMsg = to_string(theEnemy.size()); // convert float to string
-
-		if (playerHit)
-		{
-			playerDestroyedMessage = "Player destroyed.";
-		}
-		
+		outputMsg = to_string(theEnemy.size()); // convert float to string		
+		//outputMsg = to_string(floorf(runTime));
 		
 		glPushMatrix();
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-		theFontMgr->getFont("DrWho")->printText("Tardis Wars", FTPoint(10, 35, 0.0f), colour3f(0.0f,255.0f,0.0f));
-		theFontMgr->getFont("DrWho")->printText(outputMsg.c_str(), FTPoint(850, 35, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
-		theFontMgr->getFont("DrWho")->printText(playerDestroyedMessage.c_str(), FTPoint((windowWidth/2) - 100, 35, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
+		theFontMgr->getFont("Space")->printText("Asteroid Avoider", FTPoint(10, 35, 0.0f), colour3f(0.0f,255.0f,0.0f));
+		theFontMgr->getFont("Space")->printText(outputMsg.c_str(), FTPoint(windowWidth/1.2f, 35, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
+		theFontMgr->getFont("Space")->printText(playerDestroyedMessage.c_str(), FTPoint((windowWidth/10), windowHeight/2, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
 		glPopMatrix();
 
 		pgmWNDMgr->swapBuffers();
 
-		tCount += elapsedTime;
+		runTime += elapsedTime;
 
 		//Clear key buffers
 		theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
@@ -259,4 +292,22 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	pgmWNDMgr->destroyWND(); //Destroy the program window
 
     return 0; //Return success
+}
+
+void SpawnEnemy(cModelLoader* enemyLoader)
+{
+	//Create new enemy.
+	cEnemy* newEnemy = new cEnemy();
+
+	newEnemy->spawn();
+	newEnemy->setMdlDimensions(enemyLoader->getModelDimensions());
+	newEnemy->setScale(glm::vec3(5, 5, 5));
+	theEnemy.push_back(newEnemy);
+
+	//theEnemy.push_back(new cEnemy);
+	//theEnemy[*index]->spawn();
+	//theEnemy[*index]->setMdlDimensions(enemyLoader->getModelDimensions());
+	//theEnemy[*index]->setScale(glm::vec3(5, 5, 5));
+
+	return;
 }

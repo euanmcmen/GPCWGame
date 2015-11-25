@@ -3,7 +3,7 @@
 
 #define GLM_FORCE_RADIANS
 //Define the string to appear in the top left corner of the window
-#define WINDOW_TITLE "OpenGl Models - Tardis Wars"
+#define WINDOW_TITLE "Asteroid Avoider"
 
 // Windows & OpenGL 
 #include <stdlib.h>
@@ -20,7 +20,6 @@
 
 // Model Loading Library
 #include "glm-0.3.2\glm\glm.h"
-
 
 // Font
 #include "FTGL\ftgl.h"
@@ -43,7 +42,7 @@
 #include <map>
 #include <algorithm>
 
-// Textures
+// Classes
 #include "cTexture.h"
 
 struct lightColour4
@@ -69,26 +68,14 @@ struct mdlDimensions{
 	float s_mdlWidth, s_mdlheight, s_mdldepth;
 };
 
-//Player bounds within the screen.
-const float PLAYER_MAX_X = 7;
-const float PLAYER_MIN_X = -7;
-const float PLAYER_MAX_Y = 5;
-const float PLAYER_MIN_Y = -5;
-
-//For some reason, the enemies spawn differently from the player.
-const float ENEMY_MAX_X = 14;
-const float ENEMY_MIN_X = 0;
-const float ENEMY_MAX_Y = 5;
-const float ENEMY_MIN_Y = -5;
-//const float PLAYFIELDZ = 100.0f;
-
-extern bool playerHit;
+//Player related game variables.
+extern bool isPlayerHit;
+extern bool isRestarting;
 
 extern int drawMode;
 extern float rotationAngle;
 extern float translationX;
 extern float translationY;
 extern bool fire;
-
 
 #endif

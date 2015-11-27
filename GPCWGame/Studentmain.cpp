@@ -24,10 +24,12 @@
 #include "cPlayer.h"
 #include "cEnemy.h"
 #include "cLaser.h"
+#include "cPlanet.h"
+
 //#include "tardisWarsGame.h"
 
 //Forward declare methods.
-void SpawnEnemy(cModelLoader* enemyLoader);
+void SpawnEnemy(cModelLoader* enemyLoader,int type, glm::vec3 scale);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
@@ -73,13 +75,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
         return 1;
     }
 
-	// Create Texture map
-	cTexture tardisTexture;
-	tardisTexture.createTexture("Models/tardis.png");
-	cTexture spaceShipTexture;
-	spaceShipTexture.createTexture("Models/SpaceShip/sh3.jpg");
-	cTexture laserTexture;
-	laserTexture.createTexture("Models/laser.tga");
+	// Create Texture maps
+	cTexture playerTexture;
+	playerTexture.createTexture("Models/tardis.tga");
+	cTexture standardEnemyTexture;
+	standardEnemyTexture.createTexture("Models/SpaceShip/sh3.jpg");
+	cTexture altEnemyTexture;
+	altEnemyTexture.createTexture("Models/dalek/dalek.jpg");
+	cTexture planetTexture;
+	planetTexture.createTexture("Models/Jupiter/Jupiter.png");
 	cTexture starTexture;
 	starTexture.createTexture("Images/star.png");
 
@@ -96,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		glm::vec3(0.0, 0.0, 1.0), 0.0f, 180.0f, 1.0f, 0.0f, 0.0f);
 	cLight rfLight(GL_LIGHT2, lightColour4(0, 0, 0, 1), lightColour4(1, 1, 1, 1), lightColour4(1, 1, 1, 1), glm::vec4(-30, 0, 100, 1),
 		glm::vec3(0.0, 0.0, 1.0), 0.0f, 180.0f, 1.0f, 0.0f, 0.0f);
-	cLight cbLight(GL_LIGHT3, lightColour4(0, 0, 0, 1), lightColour4(1, 1, 1, 1), lightColour4(1, 1, 1, 1), glm::vec4(0, 0, -100, 1),
+	cLight cbLight(GL_LIGHT3, lightColour4(0, 0, 0, 1), lightColour4(1, 1, 1, 1), lightColour4(1, 1, 1, 1), glm::vec4(0, 2, -100, 1),
 		glm::vec3(0.0, 0.0, 1.0), 0.0f, 180.0f, 1.0f, 0.0f, 0.0f);
 	//Define Ambient light for scene
 	GLfloat g_Ambient[] = { 0.2, 0.2, 0.2, 1.0 };
@@ -118,27 +122,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theSoundMgr->add("Shot", gameSounds[1]);
 	theSoundMgr->add("Explosion", gameSounds[2]);
 
-	// Create a camera
-	cCamera theCamera;
-	theCamera.setTheCameraPos(glm::vec3(0.0f, 2.0f, 20.0f));
-	theCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
-	theCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
-	theCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
-	theCamera.setTheProjectionMatrix(75.0f, theCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
-	theCamera.update();
+	// Create close third person camera.
+	cCamera ctpvCamera;
+	ctpvCamera.setTheCameraPos(glm::vec3(0.0f, 1.0f, 20.0f));
+	ctpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
+	ctpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
+	ctpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
+	ctpvCamera.setTheProjectionMatrix(75.0f, ctpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
+	ctpvCamera.update();
+
+	// Create far third person camera.
+	cCamera ftpvCamera;
+	ftpvCamera.setTheCameraPos(glm::vec3(0.0f, 3.0f, 40.0f));
+	ftpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
+	ftpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
+	ftpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
+	ftpvCamera.setTheProjectionMatrix(75.0f, ftpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
+	ftpvCamera.update();
 
 	//Clear key buffers
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
 
 	// Models
-	cModelLoader tardisMdl;
-	tardisMdl.loadModel("Models/tardis1314.obj", tardisTexture); // Player
+	cModelLoader playerModel;
+	playerModel.loadModel("Models/tardis1314.obj", playerTexture); // Player
 
-	cModelLoader spaceShipMdl;
-	spaceShipMdl.loadModel("Models/SpaceShip/Sample_Ship.obj", spaceShipTexture); // Enemy
+	cModelLoader standardEnemyModel;
+	standardEnemyModel.loadModel("Models/SpaceShip/Sample_Ship.obj", standardEnemyTexture); // Enemy
 	
-	cModelLoader theLaser;
-	theLaser.loadModel("Models/laser.obj", laserTexture);
+	//cModelLoader altEnemyModel;
+	//altEnemyModel.loadModel("Models/tardis1314.obj", playerTexture); // Enemy #2
+
+	cModelLoader planetModel;
+	planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
 
 	//Set enemy spawn values.
 	float enemySpawnInterval = 2.0f;
@@ -149,9 +165,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	//Set up player.
 	cPlayer thePlayer;
 	thePlayer.initialise(glm::vec3(0, 0, 0), 0.0f, glm::vec3(0,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
-	thePlayer.setMdlDimensions(tardisMdl.getModelDimensions());
+	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
 	thePlayer.attachSoundMgr(theSoundMgr);
+
+	//Set up jupiter.
+	cPlanet jupiter;
+	jupiter.initialise(glm::vec3(0, 0, 100), 0.0f, glm::vec3(0, 0, 0), glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), 0.0f, true);
+	jupiter.setMdlDimensions(planetModel.getModelDimensions());
 
 	float runTime = 0.0f;
 	string outputMsg;
@@ -172,9 +193,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		theOGLWnd.initOGL(windowWidth,windowHeight);
 
+		//Load identity matrix.
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glLoadMatrixf((GLfloat*)&theCamera.getTheViewMatrix());
+
+		//Select the main camera based on index.
+		if (cameraIndex == 0)
+			glLoadMatrixf((GLfloat*)&ctpvCamera.getTheViewMatrix());
+		else if (cameraIndex == 1)
+			glLoadMatrixf((GLfloat*)&ftpvCamera.getTheViewMatrix());
 
 		theStarField.render(0.0f);
 		sunMaterial.useMaterial();
@@ -183,15 +210,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		rfLight.lightOn();
 		cbLight.lightOn();
 
+		//Render planet.
+		planetModel.renderMdl(jupiter.getPosition(), jupiter.getRotation(), jupiter.getAxis(), jupiter.getScale());
+		jupiter.update(elapsedTime);
+
 		//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
 		if (runTime > enemySpawnAt)
 		{
-			//Spawn an enemy, referencing the index and the enemy model.
+			//Spawn an enemy.
 			//Use & to pass a pointer to the value, rather than the value itself.
-			SpawnEnemy(&spaceShipMdl);
+			SpawnEnemy(&standardEnemyModel, 0, glm::vec3(5,5,5));
 
 			//Increment enemy spawn index.
 			enemyIndex++;
+
+			//If enemy index is divisable by 5, spawn an alt enemy.
+			if (enemyIndex % 5 == 0)
+				SpawnEnemy(&playerModel, 1, glm::vec3(1, 1, 1));
 
 			//Increase enemySpawnAt
 			enemySpawnAt += enemySpawnInterval;
@@ -203,15 +238,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			if ((*enemyIterator)->isActive())
 			{
 				//if the enemy is active, update and render it.
-				spaceShipMdl.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-				(*enemyIterator)->update(elapsedTime);
+				if ((*enemyIterator)->getType() == 0)
+				{
+					standardEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
+					(*enemyIterator)->update(elapsedTime);
+				}
+				else if ((*enemyIterator)->getType() == 1)
+				{
+					playerModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
+					(*enemyIterator)->update(elapsedTime);
+				}
 
 				//Check if player is colliding with the player.
-				if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
-				{
-					//Set player hit
-					isPlayerHit = true;
-				}
+				//if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
+				//{
+				//	//Set player hit
+				//	isPlayerHit = true;
+				//}
 
 				//If the enemy goes into the killzone, set it to inactive.
 				if ((*enemyIterator)->isInKillzone())
@@ -229,7 +272,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//Update the player if it hasn't been hit.
 		if (!isPlayerHit)
 		{
-			tardisMdl.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
+			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
 			thePlayer.update(elapsedTime);
 		}
 		else
@@ -265,18 +308,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		
 		//Iterate for each laser.
 		//This will probably be removed as shooting will not exist in this game.
-		for (vector<cLaser*>::iterator laserIterartor = theTardisLasers.begin(); laserIterartor != theTardisLasers.end(); ++laserIterartor)
-		{
-			if ((*laserIterartor)->isActive())
-			{
-				theLaser.renderMdl((*laserIterartor)->getPosition(), (*laserIterartor)->getRotation(), (*laserIterartor)->getAxis(), (*laserIterartor)->getScale());
-				(*laserIterartor)->update(elapsedTime);
-			}
-		}
+		//for (vector<cLaser*>::iterator laserIterartor = theTardisLasers.begin(); laserIterartor != theTardisLasers.end(); ++laserIterartor)
+		//{
+		//	if ((*laserIterartor)->isActive())
+		//	{
+		//		planetModel.renderMdl((*laserIterartor)->getPosition(), (*laserIterartor)->getRotation(), (*laserIterartor)->getAxis(), (*laserIterartor)->getScale());
+		//		(*laserIterartor)->update(elapsedTime);
+		//	}
+		//}
 
-		outputMsg = to_string(collisionIndex);
+		//outputMsg = to_string(collisionIndex);
 		//outputMsg = to_string(theEnemy.size()); // convert float to string		
-		//outputMsg = to_string(floorf(runTime));
+		outputMsg = to_string(floorf(runTime));
 		
 		glPushMatrix();
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
@@ -300,14 +343,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
     return 0; //Return success
 }
 
-void SpawnEnemy(cModelLoader* enemyLoader)
+void SpawnEnemy(cModelLoader* enemyLoader, int type, glm::vec3 scale)
 {
 	//Create new enemy.
 	theEnemy.push_back(new cEnemy);
 
 	//Get the reference of this new enemy.  It'll be at the back of the vector.
-	theEnemy.back()->spawn();
+	theEnemy.back()->spawn(scale);
 	theEnemy.back()->setMdlDimensions(enemyLoader->getModelDimensions());
-
+	theEnemy.back()->setType(type);
+	
 	return;
 }

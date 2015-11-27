@@ -9,10 +9,13 @@ class cEnemy : public cModel
 public:
 	cEnemy();
 
-	void spawn();
+	void spawn(glm::vec3 scale);
 	virtual void update(float elapsedTime);
 	bool cEnemy::isInKillzone();
+	int getType();
+	void setType(int type);
 	~cEnemy();
+	
 
 private:
 	const float m_EnemyMinSpeed = 3.0f;
@@ -24,7 +27,7 @@ private:
 	const float ENEMY_MIN_X = 0;
 	const float ENEMY_MAX_Y = 5;
 	const float ENEMY_MIN_Y = -5;
-	const float ENEMY_KILLZONE_Z = -10;
-
+	const float ENEMY_KILLZONE_Z = 20;
+	int TYPE = 0;
 };
 #endif

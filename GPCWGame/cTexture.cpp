@@ -48,11 +48,16 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 		return false;
 	}
 
-	ilInit();  /*Initialize the DevIL library*/
+	/*Initialize the DevIL library*/
+	ilInit(); 
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+
 	ilGenImages(1, &ilTextureID); //Generate DevIL image objects
 	ilBindImage(ilTextureID); /* Binding of image object */
-	success = ilLoadImage((const ILstring)theFilename); /* Loading of image*/
 
+	success = ilLoadImage((const ILstring)theFilename); /* Loading of image*/
 	if (!success)
 	{
 		ilDeleteImages(1, &ilTextureID);
@@ -70,11 +75,13 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 
 	glGenTextures(1, &GLTextureID); // GLTexture name generation 
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Use linear interpolation for magnification filter
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); // Use linear interpolation for magnification filter
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Use linear interpolation for minifying filter 
+
 	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH),
-		ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
-		ilGetData()); /* Texture specification */
+		ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData()); /* Texture specification */
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
 
 	ilDeleteImages(1, &ilTextureID);

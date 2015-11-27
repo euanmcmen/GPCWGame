@@ -1,2 +1,4 @@
-﻿  cModel.cpp
+﻿  cModelLoader.cpp
+e:\documents\github\gpcwgame\gpcwgame\cmodelloader.cpp(37): warning C4244: '=' : conversion from 'GLsizei' to 'GLfloat', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cmodelloader.cpp(38): warning C4244: '=' : conversion from 'GLsizei' to 'GLfloat', possible loss of data
   GPCWGame.vcxproj -> E:\Documents\Github\GPCWGame\Debug\GPCWGame.exe

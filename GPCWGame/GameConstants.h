@@ -75,6 +75,7 @@ extern bool isRestarting;
 //extern cPlayer thePlayer;
 
 extern int drawMode;
+extern int cameraIndex;
 extern float rotationAngle;
 extern float translationX;
 extern float translationY;

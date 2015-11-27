@@ -32,16 +32,18 @@ void cModelLoader::loadModel(const char* mdlFilename, cTexture mdlTexture)
 	glmFacetNormals(m_model);
 	glmVertexNormals(m_model, 180.0f,false);
 	m_TextureID = mdlTexture.getTexture();
+
 	m_model->textures[m_model->numtextures - 1].id = m_TextureID;
 	m_model->textures[m_model->numtextures - 1].width = mdlTexture.getTWidth();
 	m_model->textures[m_model->numtextures - 1].height = mdlTexture.getTHeight();
+
 	//glmLinearTexture(m_model);
 }
 void cModelLoader::renderMdl(glm::vec3 mdlPosition, float mdlRotationAngle, glm::vec3 axis, glm::vec3 mdlScale)
 {
 	glPushMatrix();
 	//transformations here...
-	glTranslatef(mdlPosition.x, mdlPosition.y, -mdlPosition.z);
+	glTranslatef(mdlPosition.x, mdlPosition.y, mdlPosition.z);
 	glRotatef(mdlRotationAngle, axis.x, axis.y, axis.z);
 	glScalef(mdlScale.x, mdlScale.y, mdlScale.z);
 	glmDraw(m_model, GLM_TEXTURE | GLM_MATERIAL);  // GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL

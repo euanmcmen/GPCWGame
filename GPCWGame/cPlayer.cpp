@@ -34,6 +34,13 @@ void cPlayer::update(float elapsedTime)
 		if (m_mdlPosition.y >= PLAYER_MIN_Y)
 			translationY = -1;
 	}
+	if (m_InputMgr->isKeyDown(VK_SPACE))
+	{
+		if (cameraIndex == 0)
+			cameraIndex = 1;
+		else if (cameraIndex == 1)
+			cameraIndex = 0;
+	}
 
 	//if (m_InputMgr->isKeyDown(VK_SPACE))
 	//{

@@ -99,6 +99,9 @@
     <ClCompile Include="tardisWarsGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cPlanet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cCube.h">
@@ -183,6 +186,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tardisWarsGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlanet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

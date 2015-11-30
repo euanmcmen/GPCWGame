@@ -28,7 +28,7 @@ void cModelLoader::loadModel(const char* mdlFilename, GLuint textureID)
 void cModelLoader::loadModel(const char* mdlFilename, cTexture mdlTexture)
 {
 	m_model = glmReadOBJ(mdlFilename);
-	//glmUnitize(m_model);
+	glmUnitize(m_model);
 	glmFacetNormals(m_model);
 	glmVertexNormals(m_model, 180.0f,false);
 	m_TextureID = mdlTexture.getTexture();
@@ -46,7 +46,7 @@ void cModelLoader::renderMdl(glm::vec3 mdlPosition, float mdlRotationAngle, glm:
 	glTranslatef(mdlPosition.x, mdlPosition.y, mdlPosition.z);
 	glRotatef(mdlRotationAngle, axis.x, axis.y, axis.z);
 	glScalef(mdlScale.x, mdlScale.y, mdlScale.z);
-	glmDraw(m_model, GLM_TEXTURE | GLM_MATERIAL);  // GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL
+	glmDraw(m_model, GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL);  // GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL
 	glPopMatrix();
 }
 

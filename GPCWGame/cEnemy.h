@@ -24,9 +24,11 @@ private:
 
 	//For some reason, the enemies spawn differently from the player.
 	const float ENEMY_MAX_X = 14;
-	const float ENEMY_MIN_X = 0;
-	const float ENEMY_MAX_Y = 5;
-	const float ENEMY_MIN_Y = -5;
+	const float ENEMY_MIN_X = -14;
+	//const float ENEMY2_MAX_X = 7;
+	//const float ENEMY2_MIN_X = -7;
+	const float ENEMY_MAX_Y = 6;
+	const float ENEMY_MIN_Y = -6;
 	const float ENEMY_KILLZONE_Z = 20;
 	int TYPE = 0;
 };

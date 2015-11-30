@@ -22,7 +22,7 @@ cModel::cModel()
 
 void cModel::setPosition(glm::vec3 mdlPosition)
 {
-	m_mdlPosition = mdlPosition;
+	m_mdlPosition = m_mdlScale;
 }
 
 void cModel::setRotation(GLfloat mdlRotation)
@@ -50,10 +50,11 @@ void cModel::setIsActive(bool mdlIsActive)
 	m_IsActive = mdlIsActive;
 }
 
+//Set the model dimensions to the largest dimension of the model.
 void cModel::setMdlDimensions(mdlDimensions mdlDims)
 {
 	m_Dimensions = mdlDims;
-	m_mdlRadius = m_Dimensions.s_mdldepth / 2;
+	m_mdlRadius = largestDimension(mdlDims.s_mdlheight, mdlDims.s_mdlWidth, mdlDims.s_mdldepth) / 2;
 }
 
 void cModel::setMdlRadius(float mdlRadius)
@@ -72,7 +73,7 @@ void cModel::setScale(glm::vec3 mdlScale)
 
 glm::vec3 cModel::getPosition()
 {
-	return m_mdlPosition;
+	return m_mdlPosition + offset;
 }
 
 GLfloat cModel::getRotation()
@@ -129,28 +130,47 @@ void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 ax
 	setDirection(mdlDirection);
 	setSpeed(mdlSpeed);
 	setIsActive(mdlIsActive);
-	m_Dimensions.s_mdldepth = 0.0f;
-	m_Dimensions.s_mdlheight = 0.0f;
-	m_Dimensions.s_mdlWidth = 0.0f;
-	m_mdlRadius = m_Dimensions.s_mdldepth / 2;
 	glm::vec3 mdlPos = getPosition();
 	GLfloat mdlRot = getRotation();
 	glRotatef(mdlRot, axis.x, axis.y, axis.z);
 	glTranslatef(mdlPos.x,mdlPos.y,mdlPos.z);
 }
 
-bool cModel::SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius)
+bool cModel::SphereSphereCollision(glm::vec3 otherPosition, float otherRadius)
 {
-	const float distSq = lengthSQRD(mdlPosition - m_mdlPosition);
-
-	const float sumRadius = (m_mdlRadius + mdlRadius);
-
-	return (sqrt(distSq) < (sumRadius * sumRadius));
+	const float squaredSumRadius = pow((m_mdlRadius + otherRadius), 2);
+	return (squaredSumRadius > squaredDistance(otherPosition));
 }
 
-float cModel::lengthSQRD(glm::vec3 mdlLength)
+void cModel::setOffset(glm::vec3 theoffset)
 {
-	return (mdlLength.x * mdlLength.x) + (mdlLength.y * mdlLength.y) + (mdlLength.z * mdlLength.z);
+	offset = theoffset;
+}
+
+float cModel::squaredDistance(glm::vec3 otherPosition)
+{
+	return pow((otherPosition.x - m_mdlPosition.x), 2) + pow((otherPosition.y - m_mdlPosition.y), 2) + pow((otherPosition.z - m_mdlPosition.z), 2);
+}
+
+//Find the largest of the 3 dimensions.
+float cModel::largestDimension(float height, float width, float depth)
+{
+	float currentMax = 0;
+	
+	//If the length is larger than current max, set currentMax to length.
+	if (height > currentMax)
+		currentMax = height;
+
+	//Same for width.
+	if (width > currentMax)
+		currentMax = width;
+
+	//And depth.
+	if (depth > currentMax)
+		currentMax = depth;
+
+	//Return current.
+	return currentMax;
 }
 
 /*

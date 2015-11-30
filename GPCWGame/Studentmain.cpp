@@ -29,7 +29,7 @@
 //#include "tardisWarsGame.h"
 
 //Forward declare methods.
-void SpawnEnemy(cModelLoader* enemyLoader,int type, glm::vec3 scale);
+void SpawnEnemy(cModelLoader* enemyLoader, int type, glm::vec3 scale);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
@@ -116,7 +116,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 	// load game sounds
 	// Load Sound
-	LPCSTR gameSounds[3] = { "Audio/who10Edit.wav", "Audio/shot007.wav", "Audio/explosion2.wav" };
+	LPCSTR gameSounds[3] = { "Audio/bgm.wav", "Audio/shot007.wav", "Audio/explosion2.wav" };
 
 	theSoundMgr->add("Theme", gameSounds[0]);
 	theSoundMgr->add("Shot", gameSounds[1]);
@@ -149,15 +149,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 	cModelLoader standardEnemyModel;
 	standardEnemyModel.loadModel("Models/SpaceShip/Sample_Ship.obj", standardEnemyTexture); // Enemy
+	//standardEnemyModel.loadModel("Models/viper.obj", standardEnemyTexture);
 	
 	//cModelLoader altEnemyModel;
 	//altEnemyModel.loadModel("Models/tardis1314.obj", playerTexture); // Enemy #2
 
-	cModelLoader planetModel;
-	planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
+	//cModelLoader planetModel;
+	//planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
 
 	//Set enemy spawn values.
-	float enemySpawnInterval = 2.0f;
+	float enemySpawnInterval = 0.5f;
 	float enemySpawnAt = 1.0f;
 	int enemyIndex = 0;
 	int collisionIndex = 0;
@@ -167,19 +168,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	thePlayer.initialise(glm::vec3(0, 0, 0), 0.0f, glm::vec3(0,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
 	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
-	thePlayer.attachSoundMgr(theSoundMgr);
 
 	//Set up jupiter.
-	cPlanet jupiter;
-	jupiter.initialise(glm::vec3(0, 0, 100), 0.0f, glm::vec3(0, 0, 0), glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), 0.0f, true);
-	jupiter.setMdlDimensions(planetModel.getModelDimensions());
+	//cPlanet jupiter;
+	//jupiter.initialise(glm::vec3(0, 0, 100), 0.0f, glm::vec3(0, 0, 0), glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), 0.0f, true);
+	//jupiter.setMdlDimensions(planetModel.getModelDimensions());
 
 	float runTime = 0.0f;
 	string outputMsg;
 	string playerDestroyedMessage;
 
 	//Play background music.
-	//theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -211,22 +211,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		cbLight.lightOn();
 
 		//Render planet.
-		planetModel.renderMdl(jupiter.getPosition(), jupiter.getRotation(), jupiter.getAxis(), jupiter.getScale());
-		jupiter.update(elapsedTime);
+		//planetModel.renderMdl(jupiter.getPosition(), jupiter.getRotation(), jupiter.getAxis(), jupiter.getScale());
+		//jupiter.update(elapsedTime);
 
 		//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
 		if (runTime > enemySpawnAt)
 		{
 			//Spawn an enemy.
 			//Use & to pass a pointer to the value, rather than the value itself.
-			SpawnEnemy(&standardEnemyModel, 0, glm::vec3(5,5,5));
+			SpawnEnemy(&standardEnemyModel, 0, glm::vec3(10, 10, 10));
 
 			//Increment enemy spawn index.
 			enemyIndex++;
 
 			//If enemy index is divisable by 5, spawn an alt enemy.
 			if (enemyIndex % 5 == 0)
-				SpawnEnemy(&playerModel, 1, glm::vec3(1, 1, 1));
+				SpawnEnemy(&playerModel, 1, glm::vec3(2, 2, 2));
 
 			//Increase enemySpawnAt
 			enemySpawnAt += enemySpawnInterval;
@@ -250,11 +250,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				}
 
 				//Check if player is colliding with the player.
-				//if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
-				//{
-				//	//Set player hit
-				//	isPlayerHit = true;
-				//}
+				if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
+				{
+					//Set player hit
+					isPlayerHit = true;
+					theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
+					//collisionIndex++;
+				}
 
 				//If the enemy goes into the killzone, set it to inactive.
 				if ((*enemyIterator)->isInKillzone())
@@ -299,6 +301,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Set the next enemy spawn to be <interval> seconds after elapsed time.
 			enemySpawnAt = enemySpawnInterval;
 
+			//Reset the enemy index.
+			enemyIndex = 0;
+
 			//reset the counter.
 			runTime = 0;
 			
@@ -317,9 +322,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//	}
 		//}
 
-		//outputMsg = to_string(collisionIndex);
+		outputMsg = to_string(collisionIndex);
 		//outputMsg = to_string(theEnemy.size()); // convert float to string		
-		outputMsg = to_string(floorf(runTime));
+		//outputMsg = to_string(floorf(runTime));
 		
 		glPushMatrix();
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
@@ -352,6 +357,6 @@ void SpawnEnemy(cModelLoader* enemyLoader, int type, glm::vec3 scale)
 	theEnemy.back()->spawn(scale);
 	theEnemy.back()->setMdlDimensions(enemyLoader->getModelDimensions());
 	theEnemy.back()->setType(type);
-	
+
 	return;
 }

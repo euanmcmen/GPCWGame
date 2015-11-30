@@ -143,7 +143,6 @@ void cPlayer::update(float elapsedTime)
 	cModel::m_mdlPosition += m_mdlDirection * cModel::m_mdlSpeed * elapsedTime;
 	cModel::m_mdlDirection *= 0.7f;
 
-
 	//Clamp position.
 	clampPosition();
 

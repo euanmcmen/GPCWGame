@@ -19,6 +19,7 @@ public:
 	void setScale(glm::vec3 mdlScale);
 	void setTextureID(GLuint theTextureID);
 	void setAxis(glm::vec3 axis);
+	void setOffset(glm::vec3 offset);
 
 	glm::vec3 getPosition();
 	GLfloat getRotation();
@@ -40,7 +41,11 @@ public:
 	~cModel();
 
 private:
-	float lengthSQRD(glm::vec3 mdlLength);
+	//float lengthSQRD(glm::vec3 mdlLength);
+	float squaredDistance(glm::vec3 otherLength);
+	float largestDimension(float height, float width, float depth);
+	glm::vec3 offset;
+
 	GLuint m_TextureID;
 
 protected:

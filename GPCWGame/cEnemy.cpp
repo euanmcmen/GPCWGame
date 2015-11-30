@@ -10,7 +10,7 @@ void cEnemy::spawn(glm::vec3 scale)
 {
 	cModel::m_mdlPosition.x = (ENEMY_MAX_X - ENEMY_MIN_X)*(double)rand() / (double)(RAND_MAX)+ENEMY_MIN_X;
 	cModel::m_mdlPosition.y = (ENEMY_MAX_Y - ENEMY_MIN_Y)*(double)rand() / (double)(RAND_MAX)+ENEMY_MIN_Y;
-	cModel::m_mdlPosition.z = -50.0f;
+	cModel::m_mdlPosition.z = -100.0f;
 	cModel::m_mdlRotation = 0.0f; //No rotations!
 	cModel::m_axis = glm::vec3(0, 0, 0);
 	cModel::setScale(glm::vec3(scale.x, scale.y, scale.z));
@@ -22,21 +22,6 @@ void cEnemy::update(float elapsedTime)
 {
 	//Move model towards 0 on z axis.
 	cModel::m_mdlPosition.z += cModel::m_mdlSpeed * elapsedTime;
-
-	////Check for collision
-	//if (isActive() && !isPlayerHit)
-	//{
-	//	Check if player is colliding with the enemy.
-	//	if (thePlayer.SphereSphereCollision(getPosition(), getMdlRadius()))
-	//	{
-	//		Disable player.
-	//		isPlayerHit = true;
-
-	//		Disable this enemy.
-	//		enemyIterator = theEnemy.erase(enemyIterator);
-	//		(*enemyIterator)->setIsActive(false);
-	//	}
-	//}
 }
 
 bool cEnemy::isInKillzone()

@@ -282,6 +282,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Set destroyed message.
 			playerDestroyedMessage = "Player destroyed.  Press Return to restart.";
 
+			//Stop the music.
+			theSoundMgr->getSnd("Theme")->stopAudio();
+
 			//Delete all enemies.
 			theEnemy.clear();
 
@@ -307,20 +310,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//reset the counter.
 			runTime = 0;
 			
+			//Play background music.
+			theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+
 			//Unset the flag.
 			isRestarting = false;
 		}
-		
-		//Iterate for each laser.
-		//This will probably be removed as shooting will not exist in this game.
-		//for (vector<cLaser*>::iterator laserIterartor = theTardisLasers.begin(); laserIterartor != theTardisLasers.end(); ++laserIterartor)
-		//{
-		//	if ((*laserIterartor)->isActive())
-		//	{
-		//		planetModel.renderMdl((*laserIterartor)->getPosition(), (*laserIterartor)->getRotation(), (*laserIterartor)->getAxis(), (*laserIterartor)->getScale());
-		//		(*laserIterartor)->update(elapsedTime);
-		//	}
-		//}
 
 		outputMsg = to_string(collisionIndex);
 		//outputMsg = to_string(theEnemy.size()); // convert float to string		

@@ -19,7 +19,6 @@ public:
 	void setScale(glm::vec3 mdlScale);
 	void setTextureID(GLuint theTextureID);
 	void setAxis(glm::vec3 axis);
-	void setOffset(glm::vec3 offset);
 
 	glm::vec3 getPosition();
 	GLfloat getRotation();
@@ -31,9 +30,10 @@ public:
 	float getMdlRadius();
 	glm::vec3 getScale();
 
-	void initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 axis, glm::vec3 mdlScale, glm::vec3 mdlDirection, float mdlSpeed, bool mdlIsActive);
+	//virtual void initialise() = 0; // Will be defined by the inheriting class.
 	virtual void update(float elapsedTime) = 0;     // will be defined by inherting class
 	bool SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius);
+	bool isInKillzone();
 
 	void attachInputMgr(cInputMgr* inputMgr);  // Attach the Input Manager
 	void attachSoundMgr(cSoundMgr* soundMgr);  // Attach the Sound Manager
@@ -44,7 +44,7 @@ private:
 	//float lengthSQRD(glm::vec3 mdlLength);
 	float squaredDistance(glm::vec3 otherLength);
 	float largestDimension(float height, float width, float depth);
-	glm::vec3 offset;
+	float KILLZONE_Z = 20;
 
 	GLuint m_TextureID;
 

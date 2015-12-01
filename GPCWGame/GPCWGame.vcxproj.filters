@@ -57,9 +57,6 @@
     <ClCompile Include="windowOGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidSpawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
     <ClCompile Include="cEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cLaser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cPyramid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,7 +93,10 @@
     <ClCompile Include="tardisWarsGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cPlanet.cpp">
+    <ClCompile Include="cPlanetMdl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetSphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,9 +143,6 @@
     <ClInclude Include="windowOGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidSpawner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,9 +167,6 @@
     <ClInclude Include="cEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cLaser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cPyramid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -188,7 +179,10 @@
     <ClInclude Include="tardisWarsGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cPlanet.h">
+    <ClInclude Include="cPlanetMdl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

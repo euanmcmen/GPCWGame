@@ -12,5 +12,4 @@ newmtl Material__25
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\Documents\Uni Work\Year 4\Games Programming 3\Coursework\Jupiter model\Jupiter.png
-	map_Kd E:\Documents\Uni Work\Year 4\Games Programming 3\Coursework\Jupiter model\Jupiter.png
+	map_Kd Jupiter.png

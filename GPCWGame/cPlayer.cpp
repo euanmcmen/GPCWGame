@@ -10,28 +10,45 @@ void cPlayer::attachInputMgr(cInputMgr* inputMgr)
 	m_InputMgr = inputMgr;
 }
 
+//Initialise the player with many "zero" values as the player is pretty concrete.  
+//It spawns in the same place at the same orientation etc.
+void cPlayer::initialise()
+{
+	setPosition(glm::vec3(0,0,0));
+	setRotation(0.0f);
+	setAxis(glm::vec3(0,0,0));
+	setScale(glm::vec3(1, 1, 1));
+	setDirection(glm::vec3(0,0,0));
+	setSpeed(5.0f);
+	setIsActive(true);
+	glm::vec3 mdlPos = getPosition();
+	GLfloat mdlRot = getRotation();
+	glRotatef(mdlRot, 0, 0, 0);
+	glTranslatef(mdlPos.x, mdlPos.y, mdlPos.z);
+}
+
 void cPlayer::update(float elapsedTime)
 {
 	if (m_InputMgr->isKeyDown(VK_RIGHT))
 	{
 		//If the player is within the max bounds, then move right.
-		if (m_mdlPosition.x <= PLAYER_MAX_X)
+		if (m_mdlPosition.x <= RIGHT_BOUND)
 			translationX = 1.0f;
 	}
 	if (m_InputMgr->isKeyDown(VK_LEFT))
 	{
 		//If the player is within the min bounds, then move right.
-		if (m_mdlPosition.x >= PLAYER_MIN_X)
+		if (m_mdlPosition.x >= LEFT_BOUND)
 			translationX = -1.0f;
 	}
 	if (m_InputMgr->isKeyDown(VK_UP))
 	{
-		if (m_mdlPosition.y <= PLAYER_MAX_X)
+		if (m_mdlPosition.y <= TOP_BOUND)
 			translationY = 1;
 	}
 	if (m_InputMgr->isKeyDown(VK_DOWN))
 	{
-		if (m_mdlPosition.y >= PLAYER_MIN_Y)
+		if (m_mdlPosition.y >= BOTTOM_BOUND)
 			translationY = -1;
 	}
 	if (m_InputMgr->isKeyDown(VK_SPACE))
@@ -161,27 +178,27 @@ void cPlayer::checkForRestart()
 void cPlayer::clampPosition()
 {
 	//Left bound.
-	if (m_mdlPosition.x < PLAYER_MIN_X)
+	if (m_mdlPosition.x < LEFT_BOUND)
 	{
-		m_mdlPosition.x = PLAYER_MIN_X;
+		m_mdlPosition.x = LEFT_BOUND;
 	}
 
 	//Right bound.
-	if (m_mdlPosition.x > PLAYER_MAX_X)
+	if (m_mdlPosition.x > RIGHT_BOUND)
 	{
-		m_mdlPosition.x = PLAYER_MAX_X;
+		m_mdlPosition.x = RIGHT_BOUND;
 	}
 
 	//Top bound.
-	if (m_mdlPosition.y > PLAYER_MAX_Y)
+	if (m_mdlPosition.y > TOP_BOUND)
 	{
-		m_mdlPosition.y = PLAYER_MAX_Y;
+		m_mdlPosition.y = TOP_BOUND;
 	}
 
 	//Bottom bound.
-	if (m_mdlPosition.y < PLAYER_MIN_Y)
+	if (m_mdlPosition.y < BOTTOM_BOUND)
 	{
-		m_mdlPosition.y = PLAYER_MIN_Y;
+		m_mdlPosition.y = BOTTOM_BOUND;
 	}
 }
 

@@ -23,13 +23,12 @@
 #include "cModel.h"
 #include "cPlayer.h"
 #include "cEnemy.h"
-#include "cLaser.h"
-#include "cPlanet.h"
-
-//#include "tardisWarsGame.h"
+#include "PlanetSphere.h"
+#include "Asteroid.h"
 
 //Forward declare methods.
-void SpawnEnemy(cModelLoader* enemyLoader, int type, glm::vec3 scale);
+void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type);
+void SpawnAsteroid(cModelLoader* tinyAsteroidModel);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
@@ -75,19 +74,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
         return 1;
     }
 
-	// Create Texture maps
+	// Create Texture maps and models.
+	//Player
 	cTexture playerTexture;
-	playerTexture.createTexture("Models/tardis.tga");
+	playerTexture.createTexture("Models/Tardis/Tardis.tga");
+	cModelLoader playerModel;
+	playerModel.loadModel("Models/Tardis/Tardis.obj", playerTexture);
+
+	//Enemy type 0
 	cTexture standardEnemyTexture;
 	standardEnemyTexture.createTexture("Models/SpaceShip/sh3.jpg");
-	cTexture altEnemyTexture;
-	altEnemyTexture.createTexture("Models/dalek/dalek.jpg");
-	cTexture planetTexture;
-	planetTexture.createTexture("Models/Jupiter/Jupiter.png");
+	cModelLoader standardEnemyModel;
+	standardEnemyModel.loadModel("Models/SpaceShip/Sample_Ship.obj", standardEnemyTexture);
+
+	//Enemy type 1
+	//cTexture altEnemyTexture;
+	//altEnemyTexture.createTexture("Models/dalek/dalek.jpg");
+
+	//Tiny asteroids
+	cTexture tinyAsteroidTexture;
+	tinyAsteroidTexture.createTexture("Models/TinyAsteroid/TinyAsteroid.tga");
+	cModelLoader tinyAsteroidModel;
+	tinyAsteroidModel.loadModel("Models/TinyAsteroid/TinyAsteroid.obj", tinyAsteroidTexture);
+
+	//Background planet.
+	//cModelLoader planetModel;
+	//planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
+
+	//Crete background star textures.
 	cTexture starTexture;
 	starTexture.createTexture("Images/star.png");
-
-	// the starfield
 	cStarfield theStarField(starTexture.getTexture(), glm::vec3(50.0f, 50.0f, 50.0f));
 
 	// Create Materials for lights
@@ -116,11 +132,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 	// load game sounds
 	// Load Sound
-	LPCSTR gameSounds[3] = { "Audio/bgm.wav", "Audio/shot007.wav", "Audio/explosion2.wav" };
+	LPCSTR gameSounds[3] = { "Audio/bgm.wav", "Audio/explosion.wav" };
 
 	theSoundMgr->add("Theme", gameSounds[0]);
-	theSoundMgr->add("Shot", gameSounds[1]);
-	theSoundMgr->add("Explosion", gameSounds[2]);
+	theSoundMgr->add("Explosion", gameSounds[1]);
 
 	// Create close third person camera.
 	cCamera ctpvCamera;
@@ -143,40 +158,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	//Clear key buffers
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
 
-	// Models
-	cModelLoader playerModel;
-	playerModel.loadModel("Models/tardis1314.obj", playerTexture); // Player
-
-	cModelLoader standardEnemyModel;
-	standardEnemyModel.loadModel("Models/SpaceShip/Sample_Ship.obj", standardEnemyTexture); // Enemy
-	//standardEnemyModel.loadModel("Models/viper.obj", standardEnemyTexture);
-	
-	//cModelLoader altEnemyModel;
-	//altEnemyModel.loadModel("Models/tardis1314.obj", playerTexture); // Enemy #2
-
-	//cModelLoader planetModel;
-	//planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
-
 	//Set enemy spawn values.
-	float enemySpawnInterval = 0.5f;
+	float enemySpawnInterval = 0.4f;
 	float enemySpawnAt = 1.0f;
 	int enemyIndex = 0;
 	int collisionIndex = 0;
 
+	//Set tiny asteroid spawn values.
+	float asteroidSpawnInterval = 0.1f;
+	float asteroidSpawnAt = 0.0f;
+
+	//Set the space unit countdown values.
+	//Counts down in 100's.  Displayed to the player.
+	int spaceUnits = 10000;  
+	int spaceUnitsDecAt = 2;
+	int spaceUnitsInterval = 1;
+	int spaceUnitsDecrement = 100;
+
 	//Set up player.
 	cPlayer thePlayer;
-	thePlayer.initialise(glm::vec3(0, 0, 0), 0.0f, glm::vec3(0,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
+	thePlayer.initialise();
 	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
 
 	//Set up jupiter.
 	//cPlanet jupiter;
-	//jupiter.initialise(glm::vec3(0, 0, 100), 0.0f, glm::vec3(0, 0, 0), glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), 0.0f, true);
+	//jupiter.initialise();
 	//jupiter.setMdlDimensions(planetModel.getModelDimensions());
 
-	float runTime = 0.0f;
+	//Spawn near the upper right corner.
+	PlanetSphere jupiter;
+	jupiter.create(glm::vec3(-30, 30, -120));
+
+	//variable to control the spawning of the objects.  Not displayed to the player.
+	float runTime = 0.0f;  
+	
+	//String messages to display to the player.
 	string outputMsg;
-	string playerDestroyedMessage;
+	string spaceUnitsMsg;
+	string gameOverMsg;
 
 	//Play background music.
 	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
@@ -203,7 +223,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		else if (cameraIndex == 1)
 			glLoadMatrixf((GLfloat*)&ftpvCamera.getTheViewMatrix());
 
+		//Render jupiter
+		
+
 		theStarField.render(0.0f);
+		jupiter.render();
 		sunMaterial.useMaterial();
 		sunLight.lightOn();
 		lfLight.lightOn();
@@ -214,82 +238,165 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//planetModel.renderMdl(jupiter.getPosition(), jupiter.getRotation(), jupiter.getAxis(), jupiter.getScale());
 		//jupiter.update(elapsedTime);
 
-		//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
-		if (runTime > enemySpawnAt)
+		//Update the game while the player has not been hit.
+		if (!isPlayerHit)
 		{
-			//Spawn an enemy.
-			//Use & to pass a pointer to the value, rather than the value itself.
-			SpawnEnemy(&standardEnemyModel, 0, glm::vec3(10, 10, 10));
 
-			//Increment enemy spawn index.
-			enemyIndex++;
+			//Update the player.
+			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
+			thePlayer.update(elapsedTime);
 
-			//If enemy index is divisable by 5, spawn an alt enemy.
-			if (enemyIndex % 5 == 0)
-				SpawnEnemy(&playerModel, 1, glm::vec3(2, 2, 2));
-
-			//Increase enemySpawnAt
-			enemySpawnAt += enemySpawnInterval;
-		}
-
-		//Iterate over each enemy.
-		for (vector<cEnemy*>::iterator enemyIterator = theEnemy.begin(); enemyIterator != theEnemy.end(); ++enemyIterator)
-		{
-			if ((*enemyIterator)->isActive())
+			//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
+			if (runTime > enemySpawnAt)
 			{
-				//if the enemy is active, update and render it.
-				if ((*enemyIterator)->getType() == 0)
-				{
-					standardEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-					(*enemyIterator)->update(elapsedTime);
-				}
-				else if ((*enemyIterator)->getType() == 1)
-				{
-					playerModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-					(*enemyIterator)->update(elapsedTime);
-				}
+				//Spawn an enemy.
+				//Use & to pass a pointer to the value, rather than the value itself.
+				SpawnEnemy(&standardEnemyModel, glm::vec3(10, 10, 10), 0);
 
-				//Check if player is colliding with the player.
-				if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius())  && !isPlayerHit)
-				{
-					//Set player hit
-					isPlayerHit = true;
-					theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
-					//collisionIndex++;
-				}
+				//Increment enemy spawn index.
+				enemyIndex++;
 
-				//If the enemy goes into the killzone, set it to inactive.
-				if ((*enemyIterator)->isInKillzone())
+				//If enemy index is divisable by 5, spawn an alt enemy.
+				if (enemyIndex % 5 == 0)
+					SpawnEnemy(&playerModel, glm::vec3(1, 1, 1), 1);
+
+				//Increase enemySpawnAt
+				enemySpawnAt += enemySpawnInterval;
+			}
+
+			//If the elapsed time is larger than the asteroidspawnat value, spawn an asteroid.
+			if (runTime > asteroidSpawnAt)
+			{
+				//Spawn asteroid
+				SpawnAsteroid(&tinyAsteroidModel);
+
+				//Increment asteridspawnat
+				asteroidSpawnAt += asteroidSpawnInterval;
+			}
+
+			//If the elapsed time is divisable by 2, count down the space distance units.
+			if (runTime > spaceUnitsDecAt && spaceUnits > 0)
+			{
+				//Decrement space units
+				spaceUnits -= spaceUnitsDecrement;
+
+				//Increase decat
+				spaceUnitsDecAt += spaceUnitsInterval;
+			}
+
+			//Iterate over each enemy.
+			for (vector<cEnemy*>::iterator enemyIterator = theEnemy.begin(); enemyIterator != theEnemy.end(); ++enemyIterator)
+			{
+				if ((*enemyIterator)->isActive())
 				{
-					//Disable the enemy so it isn't rendererd or updated.
-					(*enemyIterator)->setIsActive(false);
+					//if the enemy is active, update and render it.
+					if ((*enemyIterator)->getType() == 0)
+					{
+						standardEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
+						(*enemyIterator)->update(elapsedTime);
+					}
+					else if ((*enemyIterator)->getType() == 1)
+					{
+						playerModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
+						(*enemyIterator)->update(elapsedTime);
+					}
+
+					//Check if player is colliding with the player.
+					if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius()) && !isPlayerHit)
+					{
+						//Set player hit
+						isPlayerHit = true;
+						theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
+						//collisionIndex++;
+					}
+
+					//If the enemy goes into the killzone, set it to inactive.
+					if ((*enemyIterator)->isInKillzone())
+					{
+						//Disable the enemy so it isn't rendererd or updated.
+						(*enemyIterator)->setIsActive(false);
+					}
 				}
+				else
+				{
+					//enemyIterator = theEnemy.erase(enemyIterator);
+				}
+			}
+
+			//Iterate over each tiny asteroid.
+			for (vector<Asteroid*>::iterator asteroidIterator = theTinyAsteroids.begin(); asteroidIterator != theTinyAsteroids.end(); ++asteroidIterator)
+			{
+				if ((*asteroidIterator)->isActive())
+				{
+					{
+						tinyAsteroidModel.renderMdl((*asteroidIterator)->getPosition(), (*asteroidIterator)->getRotation(), (*asteroidIterator)->getAxis(), (*asteroidIterator)->getScale());
+						(*asteroidIterator)->update(elapsedTime);
+					}
+
+					//If the enemy goes into the killzone, set it to inactive.
+					if ((*asteroidIterator)->isInKillzone())
+					{
+						//Disable the enemy so it isn't rendererd or updated.
+						(*asteroidIterator)->setIsActive(false);
+					}
+				}
+				else
+				{
+					//enemyIterator = theEnemy.erase(enemyIterator);
+				}
+			}
+
+			//Check for victory condition.
+			if (spaceUnits <= 0)
+			{
+				//Set victory message.
+				gameOverMsg = "You have escaped the asteroid field!";
+
+				//Delete all objects
+				theEnemy.clear();
+				theTinyAsteroids.clear();
+
+				//Display victory text when the victory condition is met.
+				glPushMatrix();
+				theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+				theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
+				glPopMatrix();
 			}
 			else
 			{
-				//enemyIterator = theEnemy.erase(enemyIterator);
+				//Display gameplay text if the victory condition isn't met.
+				glPushMatrix();
+				theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+				theFontMgr->getFont("SevenSeg")->printText("Avoid the asteroids and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
+				theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
+				glPopMatrix();
 			}
-		}
 
-		//Update the player if it hasn't been hit.
-		if (!isPlayerHit)
-		{
-			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
-			thePlayer.update(elapsedTime);
+			//Increment runtime
+			runTime += elapsedTime;
 		}
+		
+		//If the player is not not hit, so hit, then show game over.
 		else
 		{
 			//Set destroyed message.
-			playerDestroyedMessage = "Player destroyed.  Press Return to restart.";
+			gameOverMsg = "Player destroyed.  Press Return to restart.";
 
 			//Stop the music.
 			theSoundMgr->getSnd("Theme")->stopAudio();
 
-			//Delete all enemies.
+			//Delete all objects
 			theEnemy.clear();
+			theTinyAsteroids.clear();
 
 			//Check for return key press.
 			thePlayer.checkForRestart();
+
+			//Update strings.
+			glPushMatrix();
+			theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(255.0f, 0, 0)); // uses c_str to convert string to LPCSTR
+			glPopMatrix();
 		}
 
 		//If the restart button is pressed, spawn the enemies again.
@@ -299,15 +406,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isPlayerHit = false;
 
 			//Clear the destroyed message.
-			playerDestroyedMessage = "";
+			gameOverMsg = "";
 
-			//Set the next enemy spawn to be <interval> seconds after elapsed time.
+			//Initialise the spawnAt variables
 			enemySpawnAt = enemySpawnInterval;
+			asteroidSpawnAt = asteroidSpawnInterval;
+			spaceUnitsDecAt = 2;
 
-			//Reset the enemy index.
+			//Reset counters
 			enemyIndex = 0;
-
-			//reset the counter.
+			spaceUnits = 10000;
 			runTime = 0;
 			
 			//Play background music.
@@ -317,21 +425,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isRestarting = false;
 		}
 
-		outputMsg = to_string(collisionIndex);
-		//outputMsg = to_string(theEnemy.size()); // convert float to string		
-		//outputMsg = to_string(floorf(runTime));
-		
-		glPushMatrix();
-		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-		theFontMgr->getFont("Space")->printText("Asteroid Avoider", FTPoint(10, 35, 0.0f), colour3f(0.0f,255.0f,0.0f));
-		theFontMgr->getFont("Space")->printText(outputMsg.c_str(), FTPoint(windowWidth/1.2f, 35, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
-		theFontMgr->getFont("Space")->printText(playerDestroyedMessage.c_str(), FTPoint((windowWidth/10), windowHeight/2, 0.0f), colour3f(255.0f, 255.0f, 0.0f)); // uses c_str to convert string to LPCSTR
-		glPopMatrix();
-
 		pgmWNDMgr->swapBuffers();
-
-		if (!isPlayerHit)
-			runTime += elapsedTime;
 
 		//Clear key buffers
 		theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
@@ -343,15 +437,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
     return 0; //Return success
 }
 
-void SpawnEnemy(cModelLoader* enemyLoader, int type, glm::vec3 scale)
+void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type)
 {
 	//Create new enemy.
 	theEnemy.push_back(new cEnemy);
 
 	//Get the reference of this new enemy.  It'll be at the back of the vector.
-	theEnemy.back()->spawn(scale);
+	theEnemy.back()->initialise(scale, type);
 	theEnemy.back()->setMdlDimensions(enemyLoader->getModelDimensions());
-	theEnemy.back()->setType(type);
+
+	return;
+}
+
+void SpawnAsteroid(cModelLoader* tinyAsteroidModel)
+{
+	//Create new tiny asteroid.
+	theTinyAsteroids.push_back(new Asteroid);
+
+	//Get the reference of this new tiny asteroid.  It'll be at the back of the vector. 
+	theTinyAsteroids.back()->initialise(glm::vec3(1, 1, 1));
 
 	return;
 }

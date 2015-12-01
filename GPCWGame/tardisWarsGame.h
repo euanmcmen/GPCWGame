@@ -3,9 +3,9 @@
 
 // Tardis Wars game headers
 #include "cEnemy.h"
-#include "cLaser.h"
+#include "Asteroid.h"
 
 extern vector<cEnemy*> theEnemy;
-extern vector<cLaser*> theTardisLasers;
+extern vector<Asteroid*> theTinyAsteroids;
 
 #endif

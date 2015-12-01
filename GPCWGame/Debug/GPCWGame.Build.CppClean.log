@@ -1,11 +1,11 @@
 e:\documents\github\gpcwgame\gpcwgame\debug\vc120.pdb
 e:\documents\github\gpcwgame\gpcwgame\debug\vc120.idb
-e:\documents\github\gpcwgame\gpcwgame\debug\cinputmgr.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\claser.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\clight.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cmaterial.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cmodel.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cmodelloader.obj
+e:\documents\github\gpcwgame\gpcwgame\debug\cplanet.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cplayer.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cpyramid.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cshapes.obj
@@ -17,6 +17,7 @@ e:\documents\github\gpcwgame\gpcwgame\debug\ctexture.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\ctriangle.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cwndmanager.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\gameconstants.obj
+e:\documents\github\gpcwgame\gpcwgame\debug\studentmain.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\tardiswarsgame.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\windowogl.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\asteroid.obj
@@ -27,7 +28,7 @@ e:\documents\github\gpcwgame\gpcwgame\debug\ccube.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cenemy.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cfont.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cfontmgr.obj
-e:\documents\github\gpcwgame\gpcwgame\debug\studentmain.obj
+e:\documents\github\gpcwgame\gpcwgame\debug\cinputmgr.obj
 e:\documents\github\gpcwgame\debug\gpcwgame.ilk
 e:\documents\github\gpcwgame\debug\gpcwgame.exe
 e:\documents\github\gpcwgame\debug\gpcwgame.pdb

@@ -79,6 +79,10 @@ extern int cameraIndex;
 extern float rotationAngle;
 extern float translationX;
 extern float translationY;
+extern const int RIGHT_BOUND;
+extern const int LEFT_BOUND;
+extern const int TOP_BOUND;
+extern const int BOTTOM_BOUND;
 extern bool fire;
 
 #endif

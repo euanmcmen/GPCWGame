@@ -73,7 +73,7 @@ void cModel::setScale(glm::vec3 mdlScale)
 
 glm::vec3 cModel::getPosition()
 {
-	return m_mdlPosition + offset;
+	return m_mdlPosition;
 }
 
 GLfloat cModel::getRotation()
@@ -121,30 +121,10 @@ void cModel::setTextureID(GLuint theTextureID)
 	m_TextureID = theTextureID;
 }
 
-void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 axis, glm::vec3 mdlScale, glm::vec3 mdlDirection, float mdlSpeed, bool mdlIsActive)
-{
-	setPosition(mdlPosition);
-	setRotation(mdlRotation);
-	setAxis(axis);
-	setScale(mdlScale);
-	setDirection(mdlDirection);
-	setSpeed(mdlSpeed);
-	setIsActive(mdlIsActive);
-	glm::vec3 mdlPos = getPosition();
-	GLfloat mdlRot = getRotation();
-	glRotatef(mdlRot, axis.x, axis.y, axis.z);
-	glTranslatef(mdlPos.x,mdlPos.y,mdlPos.z);
-}
-
 bool cModel::SphereSphereCollision(glm::vec3 otherPosition, float otherRadius)
 {
 	const float squaredSumRadius = pow((m_mdlRadius + otherRadius), 2);
 	return (squaredSumRadius > squaredDistance(otherPosition));
-}
-
-void cModel::setOffset(glm::vec3 theoffset)
-{
-	offset = theoffset;
 }
 
 float cModel::squaredDistance(glm::vec3 otherPosition)
@@ -171,6 +151,12 @@ float cModel::largestDimension(float height, float width, float depth)
 
 	//Return current.
 	return currentMax;
+}
+
+//Check if model is out of render view, also known as the "killzone"
+bool cModel::isInKillzone()
+{
+	return m_mdlPosition.z > KILLZONE_Z;
 }
 
 /*

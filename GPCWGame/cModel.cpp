@@ -121,6 +121,8 @@ void cModel::setTextureID(GLuint theTextureID)
 	m_TextureID = theTextureID;
 }
 
+//Determines collision. 
+//Uses squared values to avoid sqrt function.
 bool cModel::SphereSphereCollision(glm::vec3 otherPosition, float otherRadius)
 {
 	const float squaredSumRadius = pow((m_mdlRadius + otherRadius), 2);
@@ -129,6 +131,7 @@ bool cModel::SphereSphereCollision(glm::vec3 otherPosition, float otherRadius)
 
 float cModel::squaredDistance(glm::vec3 otherPosition)
 {
+	//Returns the squared distance between this object and the other object.
 	return pow((otherPosition.x - m_mdlPosition.x), 2) + pow((otherPosition.y - m_mdlPosition.y), 2) + pow((otherPosition.z - m_mdlPosition.z), 2);
 }
 

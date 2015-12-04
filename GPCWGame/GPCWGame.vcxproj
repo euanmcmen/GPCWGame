@@ -100,7 +100,6 @@
     <ClInclude Include="cMaterial.h" />
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cModelLoader.h" />
-    <ClInclude Include="cPlanetMdl.h" />
     <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cShapes.h" />
     <ClInclude Include="cSound.h" />

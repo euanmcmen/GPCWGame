@@ -10,7 +10,6 @@ public:
 	cEnemy();
 
 	void initialise(glm::vec3 scale, int type);
-	//void spawn(glm::vec3 scale);
 	virtual void update(float elapsedTime);
 	int getType();
 	void setType(int type);

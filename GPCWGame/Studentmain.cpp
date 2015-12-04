@@ -71,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
         return 1;
     }
 
-	// Create Texture maps and models.
+	// Create objects in game.
 	//Player
 	cTexture playerTexture;
 	playerTexture.createTexture("Models/SmallShip/shipC.png");
@@ -283,7 +283,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 						//Set player hit
 						isPlayerHit = true;
 						theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
-						//collisionIndex++;
 					}
 
 					//If the enemy goes into the killzone, set it to inactive.
@@ -292,10 +291,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 						//Disable the enemy so it isn't rendererd or updated.
 						(*enemyIterator)->setIsActive(false);
 					}
-				}
-				else
-				{
-					//enemyIterator = theEnemy.erase(enemyIterator);
 				}
 			}
 
@@ -315,10 +310,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 						//Disable the enemy so it isn't rendererd or updated.
 						(*asteroidIterator)->setIsActive(false);
 					}
-				}
-				else
-				{
-					//enemyIterator = theEnemy.erase(enemyIterator);
 				}
 			}
 
@@ -401,7 +392,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isRestarting = false;
 		}
 
-		//Update the fp camera position
+		//Update the fp camera position to the player's position.
 		fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
 		fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
 		fpvCamera.update();
@@ -418,6 +409,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
     return 0; //Return success
 }
 
+//Spawns an enemy which flys past the player - hopefully.
 void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type)
 {
 	//Create new enemy.
@@ -430,6 +422,7 @@ void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type)
 	return;
 }
 
+//Spawns a tiny asteroid which flys past the player.
 void SpawnAsteroid(cModelLoader* tinyAsteroidModel)
 {
 	//Create new tiny asteroid.

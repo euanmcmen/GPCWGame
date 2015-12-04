@@ -152,9 +152,6 @@
     <ClInclude Include="tardisWarsGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cPlanetMdl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlanetSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -8,10 +8,11 @@ cEnemy::cEnemy() : cModel()
 
 void cEnemy::initialise(glm::vec3 scale, int type)
 {
+	//This spawns an enemy at a random point within the bounds of the screen, with a z value of -120.
 	cModel::m_mdlPosition.x = (RIGHT_BOUND - LEFT_BOUND)*(double)rand() / (double)(RAND_MAX)+LEFT_BOUND;
 	cModel::m_mdlPosition.y = (TOP_BOUND - BOTTOM_BOUND)*(double)rand() / (double)(RAND_MAX)+BOTTOM_BOUND;
 	cModel::m_mdlPosition.z = -120.0f;
-	cModel::m_mdlRotation = (360 - 0)*(double)rand() / (double)(RAND_MAX)+0;
+	cModel::m_mdlRotation = (360 - 0)*(double)rand() / (double)(RAND_MAX);  //Generate a random number between 0 and 360.
 	cModel::m_axis = glm::vec3(static_cast<float>(rand() % 2), static_cast<float>(rand() % 2), (rand() % 2));  //Get a random float between 0 and 1
 	cModel::setScale(glm::vec3(scale.x, scale.y, scale.z));
 	cModel::m_mdlSpeed = speed;

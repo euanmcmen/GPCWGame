@@ -1,0 +1,16 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 04.05.2010 13:43:14
+
+newmtl shipA_mat
+	Ns 10.0000
+	Ni 1.5000
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	# map_Ka shipC.png
+	map_Kd shipC.png
+	# map_Ke shipI.png
+	# map_bump shipN.png
+
+	

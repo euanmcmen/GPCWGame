@@ -1,0 +1,8 @@
+# Frigate
+newmtl Frigate
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+map_Kd Frigate_colour.jpg
+# map_Ka Frigate_colour.jpg
+map_Ns Frigate_spec.jpg

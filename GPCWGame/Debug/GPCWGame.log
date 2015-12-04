@@ -1,9 +1,21 @@
-﻿  Studentmain.cpp
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(122): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(145): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(154): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(202): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(202): warning C4309: 'argument' : truncation of constant value
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(422): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
-e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(422): warning C4309: 'argument' : truncation of constant value
+﻿  cStarfield.cpp
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(52): warning C4018: '<' : signed/unsigned mismatch
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(89): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(93): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(97): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(101): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(105): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\cstarfield.cpp(109): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+  cSphere.cpp
+  cShapes.cpp
+  Studentmain.cpp
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(125): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(146): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(155): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(188): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(188): warning C4309: 'argument' : truncation of constant value
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(398): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(398): warning C4309: 'argument' : truncation of constant value
+  PlanetSphere.cpp
+  Generating Code...
   GPCWGame.vcxproj -> E:\Documents\Github\GPCWGame\Debug\GPCWGame.exe

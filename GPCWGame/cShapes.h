@@ -12,7 +12,6 @@ cShapes.h
 #include "glx\glext.h"
 #include "wglext.h"
 #include <vector>
-#include "cColours.h"
 #include "cTexture.h"
 
 class cShapes : public windowOGL

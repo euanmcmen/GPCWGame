@@ -18,17 +18,7 @@ public:
 	
 
 private:
-	const float m_EnemyMinSpeed = 3.0f;
-	const float m_EnemyMaxSpeed = 10.0f;
-	const float m_EnemySpeedAdjustment = 2.5f;
-
-	//For some reason, the enemies spawn differently from the player.
-	//const float ENEMY_MAX_X = 14;
-	//const float ENEMY_MIN_X = -14;
-	//const float ENEMY2_MAX_X = 7;
-	//const float ENEMY2_MIN_X = -7;
-	//const float ENEMY_MAX_Y = 6;
-	//const float ENEMY_MIN_Y = -6;
+	const float speed = 20.0f;
 	int TYPE = 0;
 };
 #endif

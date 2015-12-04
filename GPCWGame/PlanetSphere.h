@@ -12,12 +12,12 @@
 
 
 //This class spawns asteroids.  An asteroid, at the moment, is a moon.
-class PlanetSphere
+class PlanetSphere : public cSphere
 {
 	public:
 	PlanetSphere();
 	void create(glm::vec3 position);
-	void render();
+	void render(float elapsedTime);
 	~PlanetSphere();
 
 	private:
@@ -25,6 +25,7 @@ class PlanetSphere
 	cTexture planetTexture;
 	cMaterial planetMaterial;
 	cSphere planet;
+	float rotationSpeed = 2.0f;
 };
 
 #endif

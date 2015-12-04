@@ -16,7 +16,7 @@ void cPlayer::initialise()
 {
 	setPosition(glm::vec3(0,0,0));
 	setRotation(0.0f);
-	setAxis(glm::vec3(0,0,0));
+	setAxis(glm::vec3(0, 0, 0));
 	setScale(glm::vec3(1, 1, 1));
 	setDirection(glm::vec3(0,0,0));
 	setSpeed(5.0f);

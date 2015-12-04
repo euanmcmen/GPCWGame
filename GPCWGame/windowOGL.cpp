@@ -39,7 +39,7 @@ void windowOGL::onResize(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective(45.0f, float(width) / float(height), 1.0f, 100.0f);
+    gluPerspective(45.0f, float(width) / float(height), 1.0f, 300.0f);
 
     glMatrixMode(GL_MODELVIEW);
 

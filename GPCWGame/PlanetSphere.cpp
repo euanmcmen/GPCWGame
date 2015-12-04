@@ -18,7 +18,7 @@ void PlanetSphere::create(glm::vec3 position)
 	glPushMatrix();
 
 	//Initialise planet.
-	planet = cSphere(50, 50, 50);
+	planet = cSphere(40, 40, 40);
 
 	//Create Asteriod texture
 	planetTexture.createTexture("Images/Jupiter.png");
@@ -33,13 +33,16 @@ void PlanetSphere::create(glm::vec3 position)
 	glPopMatrix();
 }
 
-void PlanetSphere::render()
+void PlanetSphere::render(float elapsedTime)
 {
 	//Push a new matrix onto the stack.
 	glPushMatrix();
 
+	//Set rotation angle 
+	planet.setRotAngle(planet.getRotAngle() + (rotationSpeed*elapsedTime));
+
 	//Render asteroid.
-	planet.render(0.0f);
+	planet.render(planet.getRotAngle());
 
 	//Pop the matrix from the stack.
 	glPopMatrix();

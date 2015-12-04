@@ -7,10 +7,7 @@
 #include "GameConstants.h"
 #include "windowOGL.h"
 #include "cWNDManager.h"
-#include "cColours.h"
 #include "cShapes.h"
-#include "cPyramid.h"
-#include "cCube.h"
 #include "cSphere.h"
 #include "cMaterial.h"
 #include "cLight.h"
@@ -77,19 +74,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	// Create Texture maps and models.
 	//Player
 	cTexture playerTexture;
-	playerTexture.createTexture("Models/Tardis/Tardis.tga");
+	playerTexture.createTexture("Models/SmallShip/shipC.png");
 	cModelLoader playerModel;
-	playerModel.loadModel("Models/Tardis/Tardis.obj", playerTexture);
+	playerModel.loadModel("Models/SmallShip/ship.obj", playerTexture);
+	cPlayer thePlayer;
+	thePlayer.initialise();
+	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
+	thePlayer.attachInputMgr(theInputMgr);
 
 	//Enemy type 0
 	cTexture standardEnemyTexture;
-	standardEnemyTexture.createTexture("Models/SpaceShip/sh3.jpg");
+	standardEnemyTexture.createTexture("Models/Asteroid/asteroid.jpg");
 	cModelLoader standardEnemyModel;
-	standardEnemyModel.loadModel("Models/SpaceShip/Sample_Ship.obj", standardEnemyTexture);
+	standardEnemyModel.loadModel("Models/Asteroid/asteroid.obj", standardEnemyTexture);
 
 	//Enemy type 1
-	//cTexture altEnemyTexture;
-	//altEnemyTexture.createTexture("Models/dalek/dalek.jpg");
+	cTexture altEnemyTexture;
+	altEnemyTexture.createTexture("Models/Satellite/texture.jpg");
+	cModelLoader altEnemyModel;
+	altEnemyModel.loadModel("Models/Satellite/Satellite.obj", altEnemyTexture);
 
 	//Tiny asteroids
 	cTexture tinyAsteroidTexture;
@@ -97,14 +100,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	cModelLoader tinyAsteroidModel;
 	tinyAsteroidModel.loadModel("Models/TinyAsteroid/TinyAsteroid.obj", tinyAsteroidTexture);
 
-	//Background planet.
-	//cModelLoader planetModel;
-	//planetModel.loadModel("Models/Jupiter/Jupiter.obj", planetTexture);
+	//Jupiter
+	PlanetSphere jupiter;
+	jupiter.create(glm::vec3(-30, 30, -150));
 
 	//Crete background star textures.
 	cTexture starTexture;
 	starTexture.createTexture("Images/star.png");
-	cStarfield theStarField(starTexture.getTexture(), glm::vec3(50.0f, 50.0f, 50.0f));
+	cStarfield theStarField(starTexture.getTexture(), glm::vec3(200.0f, 200.0f, 200.0f));
 
 	// Create Materials for lights
 	cMaterial sunMaterial(lightColour4(0.0f, 0.0f, 0.0f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(0, 0, 0, 1.0f), 5.0f);
@@ -124,11 +127,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 	// load game fonts
 	// Load Fonts
-	LPCSTR gameFonts[3] = { "Fonts/digital-7.ttf", "Fonts/space age.ttf", "Fonts/doctor_who.ttf" };
+	LPCSTR gameFonts[1] = {"Fonts/digital-7.ttf"};
 
 	theFontMgr->addFont("SevenSeg", gameFonts[0], 24);
-	theFontMgr->addFont("Space", gameFonts[1], 24);
-	theFontMgr->addFont("DrWho", gameFonts[2], 48);
 
 	// load game sounds
 	// Load Sound
@@ -137,23 +138,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theSoundMgr->add("Theme", gameSounds[0]);
 	theSoundMgr->add("Explosion", gameSounds[1]);
 
-	// Create close third person camera.
-	cCamera ctpvCamera;
-	ctpvCamera.setTheCameraPos(glm::vec3(0.0f, 1.0f, 20.0f));
-	ctpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
-	ctpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
-	ctpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
-	ctpvCamera.setTheProjectionMatrix(75.0f, ctpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
-	ctpvCamera.update();
+	// Create third person camera.
+	cCamera tpvCamera;
+	tpvCamera.setTheCameraPos(glm::vec3(0.0f, 1.0f, 20.0f));
+	tpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
+	tpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
+	tpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
+	tpvCamera.setTheProjectionMatrix(75.0f, tpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
+	tpvCamera.update();
 
-	// Create far third person camera.
-	cCamera ftpvCamera;
-	ftpvCamera.setTheCameraPos(glm::vec3(0.0f, 3.0f, 40.0f));
-	ftpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
-	ftpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
-	ftpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
-	ftpvCamera.setTheProjectionMatrix(75.0f, ftpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
-	ftpvCamera.update();
+	// Create first person camera.
+	cCamera fpvCamera;
+	fpvCamera.setTheCameraPos(thePlayer.getPosition() + glm::vec3(0, 0, -2));
+	fpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
+	fpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
+	fpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
+	fpvCamera.setTheProjectionMatrix(75.0f, fpvCamera.getTheCameraAspectRatio(), 0.1f, 300.0f);
+	fpvCamera.update();
 
 	//Clear key buffers
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
@@ -174,21 +175,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	int spaceUnitsDecAt = 2;
 	int spaceUnitsInterval = 1;
 	int spaceUnitsDecrement = 100;
-
-	//Set up player.
-	cPlayer thePlayer;
-	thePlayer.initialise();
-	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
-	thePlayer.attachInputMgr(theInputMgr);
-
-	//Set up jupiter.
-	//cPlanet jupiter;
-	//jupiter.initialise();
-	//jupiter.setMdlDimensions(planetModel.getModelDimensions());
-
-	//Spawn near the upper right corner.
-	PlanetSphere jupiter;
-	jupiter.create(glm::vec3(-30, 30, -120));
 
 	//variable to control the spawning of the objects.  Not displayed to the player.
 	float runTime = 0.0f;  
@@ -219,24 +205,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 		//Select the main camera based on index.
 		if (cameraIndex == 0)
-			glLoadMatrixf((GLfloat*)&ctpvCamera.getTheViewMatrix());
+			glLoadMatrixf((GLfloat*)&tpvCamera.getTheViewMatrix());
 		else if (cameraIndex == 1)
-			glLoadMatrixf((GLfloat*)&ftpvCamera.getTheViewMatrix());
-
-		//Render jupiter
-		
+			glLoadMatrixf((GLfloat*)&fpvCamera.getTheViewMatrix());
 
 		theStarField.render(0.0f);
-		jupiter.render();
+		jupiter.render(elapsedTime);
 		sunMaterial.useMaterial();
 		sunLight.lightOn();
 		lfLight.lightOn();
 		rfLight.lightOn();
 		cbLight.lightOn();
-
-		//Render planet.
-		//planetModel.renderMdl(jupiter.getPosition(), jupiter.getRotation(), jupiter.getAxis(), jupiter.getScale());
-		//jupiter.update(elapsedTime);
 
 		//Update the game while the player has not been hit.
 		if (!isPlayerHit)
@@ -251,14 +230,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			{
 				//Spawn an enemy.
 				//Use & to pass a pointer to the value, rather than the value itself.
-				SpawnEnemy(&standardEnemyModel, glm::vec3(10, 10, 10), 0);
+				SpawnEnemy(&standardEnemyModel, glm::vec3(2, 2, 2), 0);
 
 				//Increment enemy spawn index.
 				enemyIndex++;
 
 				//If enemy index is divisable by 5, spawn an alt enemy.
 				if (enemyIndex % 5 == 0)
-					SpawnEnemy(&playerModel, glm::vec3(1, 1, 1), 1);
+					SpawnEnemy(&altEnemyModel, glm::vec3(1, 1, 1), 1);
 
 				//Increase enemySpawnAt
 				enemySpawnAt += enemySpawnInterval;
@@ -289,17 +268,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			{
 				if ((*enemyIterator)->isActive())
 				{
-					//if the enemy is active, update and render it.
+					//Render enemy based on type.
 					if ((*enemyIterator)->getType() == 0)
-					{
 						standardEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-						(*enemyIterator)->update(elapsedTime);
-					}
 					else if ((*enemyIterator)->getType() == 1)
-					{
-						playerModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-						(*enemyIterator)->update(elapsedTime);
-					}
+						altEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());						
+					
+					//Update the enemy.
+					(*enemyIterator)->update(elapsedTime);
 
 					//Check if player is colliding with the player.
 					if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius()) && !isPlayerHit)
@@ -424,6 +400,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Unset the flag.
 			isRestarting = false;
 		}
+
+		//Update the fp camera position
+		fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
+		fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
+		fpvCamera.update();
 
 		pgmWNDMgr->swapBuffers();
 

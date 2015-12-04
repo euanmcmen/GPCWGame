@@ -32,23 +32,23 @@ void cPlayer::update(float elapsedTime)
 	if (m_InputMgr->isKeyDown(VK_RIGHT))
 	{
 		//If the player is within the max bounds, then move right.
-		if (m_mdlPosition.x <= RIGHT_BOUND)
+		if (m_mdlPosition.x <= (RIGHT_BOUND-7))
 			translationX = 1.0f;
 	}
 	if (m_InputMgr->isKeyDown(VK_LEFT))
 	{
 		//If the player is within the min bounds, then move right.
-		if (m_mdlPosition.x >= LEFT_BOUND)
+		if (m_mdlPosition.x >= (LEFT_BOUND+7))
 			translationX = -1.0f;
 	}
 	if (m_InputMgr->isKeyDown(VK_UP))
 	{
-		if (m_mdlPosition.y <= TOP_BOUND)
+		if (m_mdlPosition.y <= (TOP_BOUND-2))
 			translationY = 1;
 	}
 	if (m_InputMgr->isKeyDown(VK_DOWN))
 	{
-		if (m_mdlPosition.y >= BOTTOM_BOUND)
+		if (m_mdlPosition.y >= (BOTTOM_BOUND+2))
 			translationY = -1;
 	}
 	if (m_InputMgr->isKeyDown(VK_SPACE))

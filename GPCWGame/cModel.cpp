@@ -3,18 +3,7 @@
 //Constructor for model.
 cModel::cModel()
 {
-	m_mdlPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_mdlRotation = 0.0f;
-	m_axis = glm::vec3(0, 0, 0);
-	m_mdlDirection = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_mdlSpeed = 0.0f;
-	m_IsActive = false;
-	m_mdlScale = glm::vec3(1.0f, 1.0f, 1.0f);
-	m_Dimensions.s_mdldepth = 0.0f;
-	m_Dimensions.s_mdlheight = 0.0f;
-	m_Dimensions.s_mdlWidth = 0.0f;
-	m_mdlRadius = m_Dimensions.s_mdldepth / 2;
-	m_TextureID = 0;
+
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++

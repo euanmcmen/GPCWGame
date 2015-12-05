@@ -23,6 +23,7 @@ cSound::~cSound()
 	cleanUp();
 }
 
+//Load a wav file.
 void cSound::loadWAVFile(LPCSTR filename)
 {
 	// Check for EAX 2.0 support
@@ -49,6 +50,7 @@ void cSound::loadWAVFile(LPCSTR filename)
 	alutUnloadWAV(m_OALFormat, m_OALData, m_OALBufferLen, m_OALFrequency);
 }
 
+//Load wav file info.
 void cSound::LoadWAVInfo(ifstream &filename, string &name, 	unsigned int &size)
 {
 	char chunk[4];
@@ -58,6 +60,8 @@ void cSound::LoadWAVInfo(ifstream &filename, string &name, 	unsigned int &size)
 	name = string(chunk, 4);
 }
 
+//Play the audio file.
+//Looping doesn't work.
 void cSound::playAudio(ALboolean sndLoop)
 {
 	alSourcei(m_OALSource, sndLoop, AL_TRUE);
@@ -66,12 +70,14 @@ void cSound::playAudio(ALboolean sndLoop)
 	alSourcePlay(m_OALSource);
 }
 
+//Stop the audio.
 void cSound::stopAudio()
 {
 	//to stop
 	alSourceStop(m_OALSource);
 }
 
+//Destructor stuff.
 void cSound::cleanUp()
 {
 	int state;

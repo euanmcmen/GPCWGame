@@ -67,7 +67,7 @@
     <ClCompile Include="TinyAsteroid.cpp" />
     <ClCompile Include="PlanetSphere.cpp" />
     <ClCompile Include="cCamera.cpp" />
-    <ClCompile Include="cEnemy.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cFontMgr.cpp" />
     <ClCompile Include="cInputMgr.cpp" />

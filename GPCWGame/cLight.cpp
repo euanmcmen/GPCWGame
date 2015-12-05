@@ -6,6 +6,7 @@ cLight.cpp
 
 #include "cLight.h"
 
+//Default constructor.
 cLight::cLight()
 {
 	m_LightID = GL_LIGHT0;
@@ -20,6 +21,8 @@ cLight::cLight()
 	m_LinearAttenuation = 0.0;
 	m_QuadraticAttenuation = 0.0;
 }
+
+//Parameterised constructor for light.
 cLight::cLight(GLenum lightID, lightColour4 ambient, lightColour4 diffuse, lightColour4 specular, glm::vec4 position, glm::vec3 spotDirection
 	, GLfloat  spotExponent, GLfloat  spotCutoff, GLfloat  constantAttenuation, GLfloat  linearAttenuation, GLfloat  quadraticAttenuation)
 {
@@ -37,6 +40,7 @@ cLight::cLight(GLenum lightID, lightColour4 ambient, lightColour4 diffuse, light
 
 }
 
+//Activates the light.
 void cLight::lightOn()
 {
 	glEnable(m_LightID);
@@ -52,6 +56,7 @@ void cLight::lightOn()
 	glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
 }
 
+//Deactivates the light.
 void cLight::lightOff()
 {
 	glDisable(m_LightID);

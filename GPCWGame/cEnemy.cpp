@@ -1,14 +1,16 @@
-#include "cEnemy.h"
-#include "tardisWarsGame.h"
+#include "Obstacle.h"
+#include "AsteroidAvoiderGame.h"
 
-cEnemy::cEnemy() : cModel()
+//Constructor of obstacle.
+Obstacle::Obstacle() : cModel()
 {
 	
 }
 
-void cEnemy::initialise(glm::vec3 scale, int type)
+//Initialises an obstacle
+void Obstacle::initialise(glm::vec3 scale, int type)
 {
-	//This spawns an enemy at a random point within the bounds of the screen, with a z value of -120.
+	//This spawns an obstacle at a random point within the bounds of the screen, with a z value of -120.
 	cModel::m_mdlPosition.x = (RIGHT_BOUND - LEFT_BOUND)*(double)rand() / (double)(RAND_MAX)+LEFT_BOUND;
 	cModel::m_mdlPosition.y = (TOP_BOUND - BOTTOM_BOUND)*(double)rand() / (double)(RAND_MAX)+BOTTOM_BOUND;
 	cModel::m_mdlPosition.z = -120.0f;
@@ -21,26 +23,27 @@ void cEnemy::initialise(glm::vec3 scale, int type)
 }
 
 
-void cEnemy::update(float elapsedTime)
+void Obstacle::update(float elapsedTime)
 {
 	//Move model towards 0 on z axis.
 	cModel::m_mdlPosition.z += cModel::m_mdlSpeed * elapsedTime;
 }
 
-//Returns the enemy type. 
-//Type = 0: standard enemy.
-//Type = 1: alt enemy.
-int cEnemy::getType()
+//Returns the obstacle type. 
+//Type = 0: obstacle enemy.
+//Type = 1: alt obstacle.
+int Obstacle::getType()
 {
 	return TYPE;
 }
 
-void cEnemy::setType(int type)
+//Sets the obstacle type.
+void Obstacle::setType(int type)
 {
 	TYPE = type;
 }
 
-cEnemy::~cEnemy()
+Obstacle::~Obstacle()
 {
 
 }

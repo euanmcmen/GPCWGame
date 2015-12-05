@@ -6,7 +6,7 @@ cStarfield.cpp
 
 #include "cStarfield.h"
 
-
+//Default constructor for the starfield.
 cStarfield::cStarfield()
 {
 	srand((unsigned)time(NULL));
@@ -20,6 +20,7 @@ cStarfield::cStarfield()
 	generateStarField();
 }
 
+//Parameterised constructor for the starfield
 cStarfield::cStarfield(GLint theTextureID, glm::vec3 theFieldVolume)
 {
 	srand((unsigned)time(NULL));
@@ -32,6 +33,7 @@ cStarfield::cStarfield(GLint theTextureID, glm::vec3 theFieldVolume)
 	generateStarField();
 }
 
+//Renders the starfield.
 void cStarfield::render(float rotAngle)
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -62,12 +64,14 @@ void cStarfield::render(float rotAngle)
 	glPopMatrix();
 }
 
+//Initialises the starfield with a texture.
 void cStarfield::initialise(cTexture theTexture)
 {
 	srand((unsigned)time(NULL));
 	glBindTexture(GL_TEXTURE_2D, theTexture.getTexture());
 }
 
+//Initialises the starfield with a texture and spherical volume.
 void cStarfield::initialise(GLint theTextureID, glm::vec3 theFieldVolume)
 {
 	srand((unsigned)time(NULL));
@@ -78,6 +82,7 @@ void cStarfield::initialise(GLint theTextureID, glm::vec3 theFieldVolume)
 
 }
 
+//Creates the starfield.
 void cStarfield::generateStarField()
 {
 	// generate starfield

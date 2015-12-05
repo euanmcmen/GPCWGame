@@ -6,6 +6,7 @@ cMaterial.cpp
 
 #include "cMaterial.h"
 
+//Default constructor for material.
 cMaterial::cMaterial()
 {
 	m_Ambient = lightColour4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -14,6 +15,8 @@ cMaterial::cMaterial()
 	m_Emission = lightColour4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_Shininess = 0;
 }
+
+//Parameterised constructor for material.
 cMaterial::cMaterial(lightColour4 ambient, lightColour4 diffuse, lightColour4 specular, lightColour4 emission, GLfloat shininess)
 {
 	m_Ambient = ambient;
@@ -24,6 +27,7 @@ cMaterial::cMaterial(lightColour4 ambient, lightColour4 diffuse, lightColour4 sp
 
 }
 
+//Applies the material.
 void cMaterial::useMaterial()
 {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, &(m_Ambient.r));

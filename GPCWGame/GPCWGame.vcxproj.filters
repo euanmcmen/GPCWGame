@@ -66,9 +66,6 @@
     <ClCompile Include="cPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Asteroid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,10 +75,13 @@
     <ClCompile Include="cSoundMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tardisWarsGame.cpp">
+    <ClCompile Include="PlanetSphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlanetSphere.cpp">
+    <ClCompile Include="AsteroidAvoiderGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyAsteroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -137,22 +137,22 @@
     <ClInclude Include="cPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Asteroid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cEnemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cSoundMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tardisWarsGame.h">
+    <ClInclude Include="PlanetSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlanetSphere.h">
+    <ClInclude Include="AsteroidAvoiderGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyAsteroid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -165,5 +165,9 @@
     <Library Include="Libraries\glm-0.3.2Lib.lib" />
     <Library Include="Libraries\OpenAL32.lib" />
     <Library Include="Libraries\alut.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

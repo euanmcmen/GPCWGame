@@ -64,7 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="TinyAsteroid.cpp" />
     <ClCompile Include="PlanetSphere.cpp" />
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cEnemy.cpp" />
@@ -85,14 +85,14 @@
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="GameConstants.cpp" />
     <ClCompile Include="Studentmain.cpp" />
-    <ClCompile Include="tardisWarsGame.cpp" />
+    <ClCompile Include="AsteroidAvoiderGame.cpp" />
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="TinyAsteroid.h" />
     <ClInclude Include="PlanetSphere.h" />
     <ClInclude Include="cCamera.h" />
-    <ClInclude Include="cEnemy.h" />
+    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cFontMgr.h" />
     <ClInclude Include="cInputMgr.h" />
@@ -109,7 +109,7 @@
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cWNDManager.h" />
     <ClInclude Include="GameConstants.h" />
-    <ClInclude Include="tardisWarsGame.h" />
+    <ClInclude Include="AsteroidAvoiderGame.h" />
     <ClInclude Include="wglext.h" />
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
@@ -122,6 +122,10 @@
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
     <Library Include="Libraries\OpenAL32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

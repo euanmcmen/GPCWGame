@@ -14,7 +14,6 @@ cShapes::cShapes()
 
 void cShapes::render(float rotAngle)
 {
-	//glRotatef(rotAngle, 0.0f, 1.0f, 0.0f); 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 

@@ -44,7 +44,6 @@
 
 // Classes
 #include "cTexture.h"
-//#include "cPlayer.h"
 
 struct lightColour4
 {
@@ -69,20 +68,14 @@ struct mdlDimensions{
 	float s_mdlWidth, s_mdlheight, s_mdldepth;
 };
 
-//Player related game variables.
 extern bool isPlayerHit;
 extern bool isRestarting;
-//extern cPlayer thePlayer;
-
-extern int drawMode;
 extern int cameraIndex;
-extern float rotationAngle;
 extern float translationX;
 extern float translationY;
 extern const int RIGHT_BOUND;
 extern const int LEFT_BOUND;
 extern const int TOP_BOUND;
 extern const int BOTTOM_BOUND;
-extern bool fire;
 
 #endif

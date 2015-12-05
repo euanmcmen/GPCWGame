@@ -1,5 +1,6 @@
 #include "cModel.h"
 
+//Constructor for model.
 cModel::cModel()
 {
 	m_mdlPosition = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -129,9 +130,10 @@ bool cModel::SphereSphereCollision(glm::vec3 otherPosition, float otherRadius)
 	return (squaredSumRadius > squaredDistance(otherPosition));
 }
 
+//Returns the squared distance between this object and the other object.
 float cModel::squaredDistance(glm::vec3 otherPosition)
 {
-	//Returns the squared distance between this object and the other object.
+
 	return pow((otherPosition.x - m_mdlPosition.x), 2) + pow((otherPosition.y - m_mdlPosition.y), 2) + pow((otherPosition.z - m_mdlPosition.z), 2);
 }
 

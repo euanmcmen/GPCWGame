@@ -6,7 +6,7 @@ cModelLoader::cModelLoader()
 	m_model = NULL;
 }
 
-
+//Loads the model with a given file name and no texture.
 void cModelLoader::loadModel(const char* mdlFilename)
 {
 	m_model = glmReadOBJ(mdlFilename);
@@ -15,6 +15,7 @@ void cModelLoader::loadModel(const char* mdlFilename)
 	glmVertexNormals(m_model, 180.0,false);
 }
 
+//Loads a model with a given file name and texture ID.
 void cModelLoader::loadModel(const char* mdlFilename, GLuint textureID)
 {
 	m_model = glmReadOBJ(mdlFilename);
@@ -25,6 +26,7 @@ void cModelLoader::loadModel(const char* mdlFilename, GLuint textureID)
 	m_model->textures[m_model->numtextures - 1].id = m_TextureID;
 }
 
+//Loads a model with a given file name and texture.
 void cModelLoader::loadModel(const char* mdlFilename, cTexture mdlTexture)
 {
 	m_model = glmReadOBJ(mdlFilename);
@@ -36,9 +38,9 @@ void cModelLoader::loadModel(const char* mdlFilename, cTexture mdlTexture)
 	m_model->textures[m_model->numtextures - 1].id = m_TextureID;
 	m_model->textures[m_model->numtextures - 1].width = mdlTexture.getTWidth();
 	m_model->textures[m_model->numtextures - 1].height = mdlTexture.getTHeight();
-
-	//glmLinearTexture(m_model);
 }
+
+//Renders the model.
 void cModelLoader::renderMdl(glm::vec3 mdlPosition, float mdlRotationAngle, glm::vec3 axis, glm::vec3 mdlScale)
 {
 	glPushMatrix();
@@ -50,6 +52,7 @@ void cModelLoader::renderMdl(glm::vec3 mdlPosition, float mdlRotationAngle, glm:
 	glPopMatrix();
 }
 
+//Returns the model dimensions.
 mdlDimensions cModelLoader::getModelDimensions()
 {
 	mdlDimensions mdl_Dims;

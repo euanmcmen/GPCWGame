@@ -19,12 +19,12 @@
 #include "cModelLoader.h"
 #include "cModel.h"
 #include "cPlayer.h"
-#include "cEnemy.h"
+#include "Obstacle.h"
 #include "PlanetSphere.h"
-#include "Asteroid.h"
+#include "TinyAsteroid.h"
 
 //Forward declare methods.
-void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type);
+void SpawnObstacle(cModelLoader* obstacleLoader, glm::vec3 scale, int type);
 void SpawnAsteroid(cModelLoader* tinyAsteroidModel);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
@@ -82,17 +82,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
 
-	//Enemy type 0
-	cTexture standardEnemyTexture;
-	standardEnemyTexture.createTexture("Models/Asteroid/asteroid.jpg");
-	cModelLoader standardEnemyModel;
-	standardEnemyModel.loadModel("Models/Asteroid/asteroid.obj", standardEnemyTexture);
+	//Obstacle type 0
+	cTexture standardObstacleTexture;
+	standardObstacleTexture.createTexture("Models/Asteroid/asteroid.jpg");
+	cModelLoader standardObstacleModel;
+	standardObstacleModel.loadModel("Models/Asteroid/asteroid.obj", standardObstacleTexture);
 
-	//Enemy type 1
-	cTexture altEnemyTexture;
-	altEnemyTexture.createTexture("Models/Satellite/texture.jpg");
-	cModelLoader altEnemyModel;
-	altEnemyModel.loadModel("Models/Satellite/Satellite.obj", altEnemyTexture);
+	//Obstacle type 1
+	cTexture altObstacleTexture;
+	altObstacleTexture.createTexture("Models/Satellite/texture.jpg");
+	cModelLoader altObstacleModel;
+	altObstacleModel.loadModel("Models/Satellite/Satellite.obj", altObstacleTexture);
 
 	//Tiny asteroids
 	cTexture tinyAsteroidTexture;
@@ -159,10 +159,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	//Clear key buffers
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
 
-	//Set enemy spawn values.
-	float enemySpawnInterval = 0.4f;
-	float enemySpawnAt = 1.0f;
-	int enemyIndex = 0;
+	//Set Obstacle spawn values.
+	float obstacleSpawnInterval = 0.4f;
+	float obstacleSpawnAt = 1.0f;
+	int obstacleIndex = 0;
 	int collisionIndex = 0;
 
 	//Set tiny asteroid spawn values.
@@ -225,22 +225,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
 			thePlayer.update(elapsedTime);
 
-			//If the elapsed time is larger than the enemyspawnat value, spawn an enemy.
-			if (runTime > enemySpawnAt)
+			//If the elapsed time is larger than the Obstaclespawnat value, spawn an Obstacle.
+			if (runTime > obstacleSpawnAt)
 			{
-				//Spawn an enemy.
+				//Spawn an Obstacle.
 				//Use & to pass a pointer to the value, rather than the value itself.
-				SpawnEnemy(&standardEnemyModel, glm::vec3(2, 2, 2), 0);
+				SpawnObstacle(&standardObstacleModel, glm::vec3(2, 2, 2), 0);
 
-				//Increment enemy spawn index.
-				enemyIndex++;
+				//Increment Obstacle spawn index.
+				obstacleIndex++;
 
-				//If enemy index is divisable by 5, spawn an alt enemy.
-				if (enemyIndex % 5 == 0)
-					SpawnEnemy(&altEnemyModel, glm::vec3(1, 1, 1), 1);
+				//If Obstacle index is divisable by 5, spawn an alt Obstacle.
+				if (obstacleIndex % 5 == 0)
+					SpawnObstacle(&altObstacleModel, glm::vec3(1, 1, 1), 1);
 
-				//Increase enemySpawnAt
-				enemySpawnAt += enemySpawnInterval;
+				//Increase obstacleSpawnAt
+				obstacleSpawnAt += obstacleSpawnInterval;
 			}
 
 			//If the elapsed time is larger than the asteroidspawnat value, spawn an asteroid.
@@ -263,52 +263,52 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				spaceUnitsDecAt += spaceUnitsInterval;
 			}
 
-			//Iterate over each enemy.
-			for (vector<cEnemy*>::iterator enemyIterator = theEnemy.begin(); enemyIterator != theEnemy.end(); ++enemyIterator)
+			//Iterate over each Obstacle.
+			for (vector<Obstacle*>::iterator obstacleIterator = theObstacles.begin(); obstacleIterator != theObstacles.end(); ++obstacleIterator)
 			{
-				if ((*enemyIterator)->isActive())
+				if ((*obstacleIterator)->isActive())
 				{
-					//Render enemy based on type.
-					if ((*enemyIterator)->getType() == 0)
-						standardEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());
-					else if ((*enemyIterator)->getType() == 1)
-						altEnemyModel.renderMdl((*enemyIterator)->getPosition(), (*enemyIterator)->getRotation(), (*enemyIterator)->getAxis(), (*enemyIterator)->getScale());						
+					//Render Obstacle based on type.
+					if ((*obstacleIterator)->getType() == 0)
+						standardObstacleModel.renderMdl((*obstacleIterator)->getPosition(), (*obstacleIterator)->getRotation(), (*obstacleIterator)->getAxis(), (*obstacleIterator)->getScale());
+					else if ((*obstacleIterator)->getType() == 1)
+						altObstacleModel.renderMdl((*obstacleIterator)->getPosition(), (*obstacleIterator)->getRotation(), (*obstacleIterator)->getAxis(), (*obstacleIterator)->getScale());
 					
-					//Update the enemy.
-					(*enemyIterator)->update(elapsedTime);
+					//Update the Obstacle.
+					(*obstacleIterator)->update(elapsedTime);
 
 					//Check if player is colliding with the player.
-					if (thePlayer.SphereSphereCollision((*enemyIterator)->getPosition(), (*enemyIterator)->getMdlRadius()) && !isPlayerHit)
+					if (thePlayer.SphereSphereCollision((*obstacleIterator)->getPosition(), (*obstacleIterator)->getMdlRadius()) && !isPlayerHit)
 					{
 						//Set player hit
 						isPlayerHit = true;
 						theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
 					}
 
-					//If the enemy goes into the killzone, set it to inactive.
-					if ((*enemyIterator)->isInKillzone())
+					//If the Obstacle goes into the killzone, set it to inactive.
+					if ((*obstacleIterator)->isInKillzone())
 					{
-						//Disable the enemy so it isn't rendererd or updated.
-						(*enemyIterator)->setIsActive(false);
+						//Disable the Obstacle so it isn't rendererd or updated.
+						(*obstacleIterator)->setIsActive(false);
 					}
 				}
 			}
 
 			//Iterate over each tiny asteroid.
-			for (vector<Asteroid*>::iterator asteroidIterator = theTinyAsteroids.begin(); asteroidIterator != theTinyAsteroids.end(); ++asteroidIterator)
+			for (vector<TinyAsteroid*>::iterator tinyAsteroidIterator = theTinyAsteroids.begin(); tinyAsteroidIterator != theTinyAsteroids.end(); ++tinyAsteroidIterator)
 			{
-				if ((*asteroidIterator)->isActive())
+				if ((*tinyAsteroidIterator)->isActive())
 				{
 					{
-						tinyAsteroidModel.renderMdl((*asteroidIterator)->getPosition(), (*asteroidIterator)->getRotation(), (*asteroidIterator)->getAxis(), (*asteroidIterator)->getScale());
-						(*asteroidIterator)->update(elapsedTime);
+						tinyAsteroidModel.renderMdl((*tinyAsteroidIterator)->getPosition(), (*tinyAsteroidIterator)->getRotation(), (*tinyAsteroidIterator)->getAxis(), (*tinyAsteroidIterator)->getScale());
+						(*tinyAsteroidIterator)->update(elapsedTime);
 					}
 
-					//If the enemy goes into the killzone, set it to inactive.
-					if ((*asteroidIterator)->isInKillzone())
+					//If the Obstacle goes into the killzone, set it to inactive.
+					if ((*tinyAsteroidIterator)->isInKillzone())
 					{
-						//Disable the enemy so it isn't rendererd or updated.
-						(*asteroidIterator)->setIsActive(false);
+						//Disable the Obstacle so it isn't rendererd or updated.
+						(*tinyAsteroidIterator)->setIsActive(false);
 					}
 				}
 			}
@@ -320,7 +320,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				gameOverMsg = "You have escaped the asteroid field!";
 
 				//Delete all objects
-				theEnemy.clear();
+				theObstacles.clear();
 				theTinyAsteroids.clear();
 
 				//Display victory text when the victory condition is met.
@@ -334,7 +334,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				//Display gameplay text if the victory condition isn't met.
 				glPushMatrix();
 				theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-				theFontMgr->getFont("SevenSeg")->printText("Avoid the asteroids and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
+				theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
 				theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
 				glPopMatrix();
 			}
@@ -353,7 +353,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			theSoundMgr->getSnd("Theme")->stopAudio();
 
 			//Delete all objects
-			theEnemy.clear();
+			theObstacles.clear();
 			theTinyAsteroids.clear();
 
 			//Check for return key press.
@@ -376,12 +376,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			gameOverMsg = "";
 
 			//Initialise the spawnAt variables
-			enemySpawnAt = enemySpawnInterval;
+			obstacleSpawnAt = obstacleSpawnInterval;
 			asteroidSpawnAt = asteroidSpawnInterval;
 			spaceUnitsDecAt = 2;
 
 			//Reset counters
-			enemyIndex = 0;
+			obstacleIndex = 0;
 			spaceUnits = 10000;
 			runTime = 0;
 			
@@ -409,15 +409,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
     return 0; //Return success
 }
 
-//Spawns an enemy which flys past the player - hopefully.
-void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type)
+//Spawns an Obstacle which flys past the player - hopefully.
+void SpawnObstacle(cModelLoader* ObstacleLoader, glm::vec3 scale, int type)
 {
-	//Create new enemy.
-	theEnemy.push_back(new cEnemy);
+	//Create new obstacle.
+	theObstacles.push_back(new Obstacle);
 
-	//Get the reference of this new enemy.  It'll be at the back of the vector.
-	theEnemy.back()->initialise(scale, type);
-	theEnemy.back()->setMdlDimensions(enemyLoader->getModelDimensions());
+	//Get the reference of this new obstacle.  It'll be at the back of the vector.
+	theObstacles.back()->initialise(scale, type);
+	theObstacles.back()->setMdlDimensions(ObstacleLoader->getModelDimensions());
 
 	return;
 }
@@ -426,7 +426,7 @@ void SpawnEnemy(cModelLoader* enemyLoader, glm::vec3 scale, int type)
 void SpawnAsteroid(cModelLoader* tinyAsteroidModel)
 {
 	//Create new tiny asteroid.
-	theTinyAsteroids.push_back(new Asteroid);
+	theTinyAsteroids.push_back(new TinyAsteroid);
 
 	//Get the reference of this new tiny asteroid.  It'll be at the back of the vector. 
 	theTinyAsteroids.back()->initialise(glm::vec3(1, 1, 1));

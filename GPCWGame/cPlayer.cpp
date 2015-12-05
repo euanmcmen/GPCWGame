@@ -5,6 +5,7 @@ cPlayer::cPlayer() : cModel()
 
 }
 
+//Attaches the input manager for the player.
 void cPlayer::attachInputMgr(cInputMgr* inputMgr)
 {
 	m_InputMgr = inputMgr;
@@ -27,17 +28,18 @@ void cPlayer::initialise()
 	glTranslatef(mdlPos.x, mdlPos.y, mdlPos.z);
 }
 
+//Updates the player.
 void cPlayer::update(float elapsedTime)
 {
+	//Check for movement through arrow keys.
+	//Only allow movement if the player is within the bounds of the screen.
 	if (m_InputMgr->isKeyDown(VK_RIGHT))
 	{
-		//If the player is within the max bounds, then move right.
 		if (m_mdlPosition.x <= (RIGHT_BOUND-7))
 			translationX = 1.0f;
 	}
 	if (m_InputMgr->isKeyDown(VK_LEFT))
 	{
-		//If the player is within the min bounds, then move right.
 		if (m_mdlPosition.x >= (LEFT_BOUND+7))
 			translationX = -1.0f;
 	}
@@ -66,50 +68,20 @@ void cPlayer::update(float elapsedTime)
 	mdlVelocityAdd.z = 0.0f;
 
 	cModel::m_mdlDirection += mdlVelocityAdd;
-
 	cModel::m_mdlPosition += m_mdlDirection * cModel::m_mdlSpeed * elapsedTime;
 	cModel::m_mdlDirection *= 0.7f;
-
-	//Clamp position.
-	clampPosition();
 
 	translationX = 0;
 	translationY = 0;
 }
 
+//Sets the restart flag when return key is pressed.
 void cPlayer::checkForRestart()
 {
 	if (m_InputMgr->isKeyDown(VK_RETURN))
 	{
 		isRestarting = true;
 	}	
-}
-
-void cPlayer::clampPosition()
-{
-	//Left bound.
-	if (m_mdlPosition.x < LEFT_BOUND)
-	{
-		m_mdlPosition.x = LEFT_BOUND;
-	}
-
-	//Right bound.
-	if (m_mdlPosition.x > RIGHT_BOUND)
-	{
-		m_mdlPosition.x = RIGHT_BOUND;
-	}
-
-	//Top bound.
-	if (m_mdlPosition.y > TOP_BOUND)
-	{
-		m_mdlPosition.y = TOP_BOUND;
-	}
-
-	//Bottom bound.
-	if (m_mdlPosition.y < BOTTOM_BOUND)
-	{
-		m_mdlPosition.y = BOTTOM_BOUND;
-	}
 }
 
 cPlayer::~cPlayer()

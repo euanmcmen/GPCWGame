@@ -5,6 +5,7 @@ windowOGL::windowOGL()
 
 }
 
+//Initialises Open GL window.
 bool windowOGL::initOGL(int width, int height)
 {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -19,6 +20,7 @@ bool windowOGL::initOGL(int width, int height)
     return true;
 }
 
+//Renders to the window.
 void windowOGL::renderOGL(float rotAngle)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -32,6 +34,7 @@ void windowOGL::shutdown()
 
 }
 
+//Called when window is resized.
 void windowOGL::onResize(int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -46,6 +49,7 @@ void windowOGL::onResize(int width, int height)
     glLoadIdentity();
 }
 
+//Uses an ortho view rather than a perspective (3D) view.
 void windowOGL::setOrtho2D(int width, int height)
 {
 	glDisable(GL_DEPTH_TEST);
@@ -58,6 +62,7 @@ void windowOGL::setOrtho2D(int width, int height)
 	glLoadIdentity();
 }
 
+//Uses a 3D view.
 void windowOGL::setProjection3D(int width, int height)
 {
 	onResize(width, height);

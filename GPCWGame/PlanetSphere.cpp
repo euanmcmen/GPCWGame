@@ -1,6 +1,6 @@
 #include "PlanetSphere.h"
 
-
+//Constructor for PlanetSphere.
 PlanetSphere::PlanetSphere()
 {
 
@@ -11,7 +11,7 @@ PlanetSphere::~PlanetSphere()
 
 }
 
-
+//Initialises a new planetsphere at a given position.
 void PlanetSphere::create(glm::vec3 position)
 {
 	//Push a new matrix onto the stack.
@@ -33,6 +33,7 @@ void PlanetSphere::create(glm::vec3 position)
 	glPopMatrix();
 }
 
+//Renders the planet.
 void PlanetSphere::render(float elapsedTime)
 {
 	//Push a new matrix onto the stack.

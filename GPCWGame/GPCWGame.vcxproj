@@ -38,15 +38,20 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)\DirectX\Include;$(ProjectDir)\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\DirectX\Lib86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\DirectX\Include;$(ProjectDir)\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>XInput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,6 +69,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cXBOXController.cpp" />
     <ClCompile Include="TinyAsteroid.cpp" />
     <ClCompile Include="PlanetSphere.cpp" />
     <ClCompile Include="cCamera.cpp" />
@@ -89,6 +95,7 @@
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cXBOXController.h" />
     <ClInclude Include="TinyAsteroid.h" />
     <ClInclude Include="PlanetSphere.h" />
     <ClInclude Include="cCamera.h" />
@@ -122,10 +129,6 @@
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
     <Library Include="Libraries\OpenAL32.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

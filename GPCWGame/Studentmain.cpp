@@ -22,10 +22,11 @@
 #include "Obstacle.h"
 #include "PlanetSphere.h"
 #include "TinyAsteroid.h"
+//#include "cXBOXController.h"
 
 //Forward declare methods.
 void SpawnObstacle(cModelLoader* obstacleLoader, glm::vec3 scale, int type);
-void SpawnAsteroid(cModelLoader* tinyAsteroidModel);
+void SpawnTinyAsteroid(cModelLoader* tinyAsteroidModel);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
@@ -49,10 +50,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	//The example OpenGL code
     windowOGL theOGLWnd;
 
-    //Attach our example to our window
+    //Attach our OpenGL window to our window
 	pgmWNDMgr->attachOGLWnd(&theOGLWnd);
 
-	// Attach the keyboard manager
+	//Attach the keyboard manager
 	pgmWNDMgr->attachInputMgr(theInputMgr);
 
     //Attempt to create the window
@@ -81,6 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	thePlayer.initialise();
 	thePlayer.setMdlDimensions(playerModel.getModelDimensions());
 	thePlayer.attachInputMgr(theInputMgr);
+	thePlayer.setUpXboxController();
 
 	//Obstacle type 0
 	cTexture standardObstacleTexture;
@@ -138,6 +140,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theSoundMgr->add("Theme", gameSounds[0]);
 	theSoundMgr->add("Explosion", gameSounds[1]);
 
+	//Play background music.
+
+	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
 	// Create third person camera.
 	cCamera tpvCamera;
 	tpvCamera.setTheCameraPos(glm::vec3(0.0f, 1.0f, 20.0f));
@@ -163,7 +168,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	float obstacleSpawnInterval = 0.4f;
 	float obstacleSpawnAt = 1.0f;
 	int obstacleIndex = 0;
-	int collisionIndex = 0;
 
 	//Set tiny asteroid spawn values.
 	float asteroidSpawnInterval = 0.1f;
@@ -183,9 +187,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	string outputMsg;
 	string spaceUnitsMsg;
 	string gameOverMsg;
-
-	//Play background music.
-	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -220,7 +221,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//Update the game while the player has not been hit.
 		if (!isPlayerHit)
 		{
-
 			//Update the player.
 			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
 			thePlayer.update(elapsedTime);
@@ -247,7 +247,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			if (runTime > asteroidSpawnAt)
 			{
 				//Spawn asteroid
-				SpawnAsteroid(&tinyAsteroidModel);
+				SpawnTinyAsteroid(&tinyAsteroidModel);
 
 				//Increment asteridspawnat
 				asteroidSpawnAt += asteroidSpawnInterval;
@@ -339,6 +339,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				glPopMatrix();
 			}
 
+
+			//Update the fp camera position to the player's position.
+			fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
+			fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
+			fpvCamera.update();
+
 			//Increment runtime
 			runTime += elapsedTime;
 		}
@@ -366,7 +372,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			glPopMatrix();
 		}
 
-		//If the restart button is pressed, spawn the enemies again.
+		//If the restart button is pressed, spawn the objects again.
 		if (isRestarting)
 		{
 			//Set the player hit status to false.
@@ -392,10 +398,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isRestarting = false;
 		}
 
-		//Update the fp camera position to the player's position.
-		fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
-		fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
-		fpvCamera.update();
+		//Check for window closing event.
+		if (thePlayer.checkForExit())
+		{
+			DestroyWindow(pgmWNDMgr->getWNDHandle());
+		}
+
+		//Check for sound toggle event.
+		if (thePlayer.checkIfShouldPlaySound() && !soundEventHandled)
+		{
+			//Play the music.
+			theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+			soundEventHandled = true;
+		}
+		else if (!thePlayer.checkIfShouldPlaySound() && !soundEventHandled)
+		{
+			//Stop the music.
+			theSoundMgr->getSnd("Theme")->stopAudio();
+			soundEventHandled = true;
+		}
 
 		pgmWNDMgr->swapBuffers();
 
@@ -423,7 +444,7 @@ void SpawnObstacle(cModelLoader* ObstacleLoader, glm::vec3 scale, int type)
 }
 
 //Spawns a tiny asteroid which flys past the player.
-void SpawnAsteroid(cModelLoader* tinyAsteroidModel)
+void SpawnTinyAsteroid(cModelLoader* tinyAsteroidModel)
 {
 	//Create new tiny asteroid.
 	theTinyAsteroids.push_back(new TinyAsteroid);

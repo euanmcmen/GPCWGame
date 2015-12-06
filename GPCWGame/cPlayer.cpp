@@ -15,6 +15,7 @@ void cPlayer::attachInputMgr(cInputMgr* inputMgr)
 //It spawns in the same place at the same orientation etc.
 void cPlayer::initialise()
 {
+	//Model position and initialisation
 	setPosition(glm::vec3(0,0,0));
 	setRotation(0.0f);
 	setAxis(glm::vec3(0, 0, 0));
@@ -28,37 +29,108 @@ void cPlayer::initialise()
 	glTranslatef(mdlPos.x, mdlPos.y, mdlPos.z);
 }
 
+void cPlayer::setUpXboxController()
+{
+	//Set up xbox controller
+	controller = cXBOXController();
+}
+
 //Updates the player.
 void cPlayer::update(float elapsedTime)
 {
-	//Check for movement through arrow keys.
+	//Check for movement through arrow keys
 	//Only allow movement if the player is within the bounds of the screen.
 	if (m_InputMgr->isKeyDown(VK_RIGHT))
 	{
-		if (m_mdlPosition.x <= (RIGHT_BOUND-7))
+		if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
 			translationX = 1.0f;
 	}
+
 	if (m_InputMgr->isKeyDown(VK_LEFT))
 	{
-		if (m_mdlPosition.x >= (LEFT_BOUND+7))
+		if (m_mdlPosition.x >= (LEFT_BOUND + 7))
 			translationX = -1.0f;
 	}
+
 	if (m_InputMgr->isKeyDown(VK_UP))
 	{
-		if (m_mdlPosition.y <= (TOP_BOUND-2))
+		if (m_mdlPosition.y <= (TOP_BOUND - 2))
 			translationY = 1;
 	}
+
 	if (m_InputMgr->isKeyDown(VK_DOWN))
 	{
-		if (m_mdlPosition.y >= (BOTTOM_BOUND+2))
+		if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
 			translationY = -1;
 	}
-	if (m_InputMgr->isKeyDown(VK_SPACE))
+
+	//Change the camera.
+	if (m_InputMgr->isKeyDown(0x43))  //C Key
 	{
 		if (cameraIndex == 0)
 			cameraIndex = 1;
 		else if (cameraIndex == 1)
 			cameraIndex = 0;
+	}
+
+	//Toggle sound.
+	if (m_InputMgr->isKeyDown(0x4D) && soundEventHandled)  //M Key
+	{
+		shouldPlaySound = !shouldPlaySound;
+
+		//Set the event handled to false so it can be picked up by the main file.
+		soundEventHandled = false;
+	}
+
+
+	//Check for input from the controller.
+	if (controller.IsConnected())
+	{
+		if (controller.GetState().Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)
+		{
+			if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
+				translationX = 0.5f;
+		}
+
+		if (controller.GetState().Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)
+		{
+			if (m_mdlPosition.x >= (LEFT_BOUND + 7))
+				translationX = -0.5f;
+		}
+
+		if (controller.GetState().Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)
+		{
+			if (m_mdlPosition.y <= (TOP_BOUND - 2))
+				translationY = 0.5f;
+		}
+
+		if (controller.GetState().Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)
+		{
+			if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
+				translationY = -0.5f;
+		}
+
+		//Change the camera with the controller.
+		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
+			cameraIndex = 0;
+		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y)
+			cameraIndex = 1;
+
+		//Toggle sound with the controller.
+		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+		{
+			shouldPlaySound = true;
+
+			//Set the event handled to false so it can be picked up by the main file.
+			soundEventHandled = false;
+		}
+		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
+		{
+			shouldPlaySound = false;
+
+			//Set the event handled to false so it can be picked up by the main file.
+			soundEventHandled = false;
+		}
 	}
 
 	//Create velocity vector.
@@ -78,10 +150,28 @@ void cPlayer::update(float elapsedTime)
 //Sets the restart flag when return key is pressed.
 void cPlayer::checkForRestart()
 {
-	if (m_InputMgr->isKeyDown(VK_RETURN))
+	if (m_InputMgr->isKeyDown(VK_RETURN) || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
 	{
 		isRestarting = true;
 	}	
+}
+
+//Returns whether or not the sound should be played.
+bool cPlayer::checkIfShouldPlaySound()
+{
+	return shouldPlaySound;
+}
+
+//Returns true when the user presses the exit key. 
+//This is called from and processed by the main file.
+bool cPlayer::checkForExit()
+{
+	if (m_InputMgr->isKeyDown(VK_ESCAPE) || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 cPlayer::~cPlayer()

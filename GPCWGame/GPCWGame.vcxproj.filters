@@ -84,6 +84,9 @@
     <ClCompile Include="Obstacle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cXBOXController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cFont.h">
@@ -155,6 +158,9 @@
     <ClInclude Include="Obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cXBOXController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\DevIL.lib" />
@@ -165,9 +171,5 @@
     <Library Include="Libraries\glm-0.3.2Lib.lib" />
     <Library Include="Libraries\OpenAL32.lib" />
     <Library Include="Libraries\alut.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

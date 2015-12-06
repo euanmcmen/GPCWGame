@@ -1,6 +1,6 @@
 e:\documents\github\gpcwgame\gpcwgame\debug\vc120.pdb
 e:\documents\github\gpcwgame\gpcwgame\debug\vc120.idb
-e:\documents\github\gpcwgame\gpcwgame\debug\cenemy.obj
+e:\documents\github\gpcwgame\gpcwgame\debug\obstacle.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cfont.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cfontmgr.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\cinputmgr.obj
@@ -20,6 +20,7 @@ e:\documents\github\gpcwgame\gpcwgame\debug\gameconstants.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\studentmain.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\asteroidavoidergame.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\windowogl.obj
+e:\documents\github\gpcwgame\gpcwgame\debug\cxboxcontroller.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\tinyasteroid.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\planetsphere.obj
 e:\documents\github\gpcwgame\gpcwgame\debug\ccamera.obj

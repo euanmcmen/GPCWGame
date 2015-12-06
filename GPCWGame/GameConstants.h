@@ -71,6 +71,7 @@ struct mdlDimensions{
 extern bool isPlayerHit;
 extern bool isRestarting;
 extern int cameraIndex;
+extern bool soundEventHandled;
 extern float translationX;
 extern float translationY;
 extern const int RIGHT_BOUND;

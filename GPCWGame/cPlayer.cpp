@@ -73,10 +73,19 @@ void cPlayer::update(float elapsedTime)
 			cameraIndex = 0;
 	}
 
-	//Toggle sound.
 	if (m_InputMgr->isKeyDown(0x4D) && soundEventHandled)  //M Key
 	{
-		shouldPlaySound = !shouldPlaySound;
+		//Toggle sound.
+		if (shouldPlaySound)
+		{
+			shouldPlaySound = false;
+			soundText = "Sound: [OFF]";
+		}
+		else if (!shouldPlaySound)
+		{
+			shouldPlaySound = true;
+			soundText = "Sound: [ON]";
+		}
 
 		//Set the event handled to false so it can be picked up by the main file.
 		soundEventHandled = false;
@@ -116,17 +125,22 @@ void cPlayer::update(float elapsedTime)
 		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y)
 			cameraIndex = 1;
 
-		//Toggle sound with the controller.
+
+		//Switch sound on
 		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
 		{
 			shouldPlaySound = true;
+			soundText = "Sound: [ON]";
 
 			//Set the event handled to false so it can be picked up by the main file.
 			soundEventHandled = false;
 		}
+
+		//Switch sound off.
 		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
 		{
 			shouldPlaySound = false;
+			soundText = "Sound: [OFF]";
 
 			//Set the event handled to false so it can be picked up by the main file.
 			soundEventHandled = false;

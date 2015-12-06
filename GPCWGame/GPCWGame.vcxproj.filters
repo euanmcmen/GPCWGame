@@ -172,4 +172,7 @@
     <Library Include="Libraries\OpenAL32.lib" />
     <Library Include="Libraries\alut.lib" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@ int cameraIndex = 0;
 
 //Boolean to determine whether the sound toggle event has been handled.
 bool soundEventHandled = true;
+string soundText = "Sound: [ON]";
 
 //Window borders.
 const int TOP_BOUND = 7;

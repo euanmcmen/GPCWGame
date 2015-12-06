@@ -22,7 +22,6 @@
 #include "Obstacle.h"
 #include "PlanetSphere.h"
 #include "TinyAsteroid.h"
-//#include "cXBOXController.h"
 
 //Forward declare methods.
 void SpawnObstacle(cModelLoader* obstacleLoader, glm::vec3 scale, int type);
@@ -184,9 +183,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	float runTime = 0.0f;  
 	
 	//String messages to display to the player.
-	string outputMsg;
 	string spaceUnitsMsg;
 	string gameOverMsg;
+	string victoryText;
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -282,7 +281,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 					{
 						//Set player hit
 						isPlayerHit = true;
-						theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
+
+						if (thePlayer.checkIfShouldPlaySound())
+							theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
 					}
 
 					//If the Obstacle goes into the killzone, set it to inactive.
@@ -324,21 +325,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				theTinyAsteroids.clear();
 
 				//Display victory text when the victory condition is met.
-				glPushMatrix();
-				theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-				theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
-				glPopMatrix();
+				//glPushMatrix();
+				//theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+				//theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
+				//glPopMatrix();
 			}
 			else
 			{
-				//Display gameplay text if the victory condition isn't met.
-				glPushMatrix();
-				theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-				theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
-				theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
-				glPopMatrix();
+				////Display gameplay text if the victory condition isn't met.
+				//glPushMatrix();
+				//theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+				//theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
+				//theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
+				//glPopMatrix();
 			}
-
 
 			//Update the fp camera position to the player's position.
 			fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
@@ -417,6 +417,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			theSoundMgr->getSnd("Theme")->stopAudio();
 			soundEventHandled = true;
 		}
+
+		//Display text.
+		glPushMatrix();
+		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+		theFontMgr->getFont("SevenSeg")->printText(soundText.c_str(), FTPoint(windowWidth - 150, 35), colour3f(0, 0, 255.0f));
+
+		//Display gameplay text if the victory condition isn't met.
+		if (!isPlayerHit)
+		{
+			theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
+			theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
+
+			//If victory condition is met, display message.
+			if (spaceUnits <= 0)
+			{
+				theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
+			}
+		}
+		//Display game over message.
+		else
+		{
+			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(255.0f, 0, 0));
+		}
+
+		//Display 
+		glPopMatrix();
 
 		pgmWNDMgr->swapBuffers();
 

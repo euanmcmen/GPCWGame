@@ -1,2 +1,11 @@
-﻿  cPlayer.cpp
+﻿  Studentmain.cpp
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(126): warning C4305: 'initializing' : truncation from 'double' to 'GLfloat'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(144): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(144): warning C4309: 'argument' : truncation of constant value
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(150): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(159): warning C4244: 'argument' : conversion from 'const int' to 'GLfloat', possible loss of data
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(395): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(395): warning C4309: 'argument' : truncation of constant value
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(411): warning C4305: 'argument' : truncation from 'int' to 'ALboolean'
+e:\documents\github\gpcwgame\gpcwgame\studentmain.cpp(411): warning C4309: 'argument' : truncation of constant value
   GPCWGame.vcxproj -> E:\Documents\Github\GPCWGame\Debug\GPCWGame.exe

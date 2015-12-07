@@ -173,7 +173,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	float asteroidSpawnAt = 0.0f;
 
 	//Set the space unit countdown values.
-	//Counts down in 100's.  Displayed to the player.
+	//SpaceUnits counts down in steps of 100, and is Displayed to the player.
 	int spaceUnits = 10000;  
 	int spaceUnitsDecAt = 2;
 	int spaceUnitsInterval = 1;
@@ -209,6 +209,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		else if (cameraIndex == 1)
 			glLoadMatrixf((GLfloat*)&fpvCamera.getTheViewMatrix());
 
+		//Render background scene components.
 		theStarField.render(0.0f);
 		jupiter.render(elapsedTime);
 		sunMaterial.useMaterial();
@@ -265,6 +266,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Iterate over each Obstacle.
 			for (vector<Obstacle*>::iterator obstacleIterator = theObstacles.begin(); obstacleIterator != theObstacles.end(); ++obstacleIterator)
 			{
+				//If the obstacle is active...
 				if ((*obstacleIterator)->isActive())
 				{
 					//Render Obstacle based on type.
@@ -298,17 +300,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Iterate over each tiny asteroid.
 			for (vector<TinyAsteroid*>::iterator tinyAsteroidIterator = theTinyAsteroids.begin(); tinyAsteroidIterator != theTinyAsteroids.end(); ++tinyAsteroidIterator)
 			{
+				//If the asteroid is active..
 				if ((*tinyAsteroidIterator)->isActive())
 				{
 					{
+						//Update and render.
 						tinyAsteroidModel.renderMdl((*tinyAsteroidIterator)->getPosition(), (*tinyAsteroidIterator)->getRotation(), (*tinyAsteroidIterator)->getAxis(), (*tinyAsteroidIterator)->getScale());
 						(*tinyAsteroidIterator)->update(elapsedTime);
 					}
 
-					//If the Obstacle goes into the killzone, set it to inactive.
+					//If the asteroid goes into the killzone, set it to inactive.
 					if ((*tinyAsteroidIterator)->isInKillzone())
 					{
-						//Disable the Obstacle so it isn't rendererd or updated.
+						//Disable the asteroid so it isn't rendered or updated.
 						(*tinyAsteroidIterator)->setIsActive(false);
 					}
 				}

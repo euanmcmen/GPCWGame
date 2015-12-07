@@ -129,21 +129,27 @@ void cPlayer::update(float elapsedTime)
 		//Switch sound on
 		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
 		{
-			shouldPlaySound = true;
-			soundText = "Sound: [ON]";
+			if (!shouldPlaySound)
+			{
+				shouldPlaySound = true;
+				soundText = "Sound: [ON]";
 
-			//Set the event handled to false so it can be picked up by the main file.
-			soundEventHandled = false;
+				//Set the event handled to false so it can be picked up by the main file.
+				soundEventHandled = false;
+			}
 		}
 
 		//Switch sound off.
 		if (controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
 		{
-			shouldPlaySound = false;
-			soundText = "Sound: [OFF]";
+			if (shouldPlaySound)
+			{
+				shouldPlaySound = false;
+				soundText = "Sound: [OFF]";
 
-			//Set the event handled to false so it can be picked up by the main file.
-			soundEventHandled = false;
+				//Set the event handled to false so it can be picked up by the main file.
+				soundEventHandled = false;
+			}
 		}
 	}
 

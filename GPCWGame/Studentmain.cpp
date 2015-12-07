@@ -130,7 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	// Load Fonts
 	LPCSTR gameFonts[1] = {"Fonts/digital-7.ttf"};
 
-	theFontMgr->addFont("SevenSeg", gameFonts[0], 24);
+	theFontMgr->addFont("SevenSeg", gameFonts[0], 36);
 
 	// load game sounds
 	// Load Sound
@@ -184,8 +184,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	
 	//String messages to display to the player.
 	string spaceUnitsMsg;
-	string gameOverMsg;
-	string victoryText;
+	string gameOverMsg = "Player destroyed.  Press Return to restart.";
+	string victoryText = "You have escaped the asteroid field!";
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -252,7 +252,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 				asteroidSpawnAt += asteroidSpawnInterval;
 			}
 
-			//If the elapsed time is divisable by 2, count down the space distance units.
+			//If the runtime is at or the decrement time, decrement.
 			if (runTime > spaceUnitsDecAt && spaceUnits > 0)
 			{
 				//Decrement space units
@@ -317,27 +317,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			//Check for victory condition.
 			if (spaceUnits <= 0)
 			{
-				//Set victory message.
-				gameOverMsg = "You have escaped the asteroid field!";
-
 				//Delete all objects
 				theObstacles.clear();
 				theTinyAsteroids.clear();
-
-				//Display victory text when the victory condition is met.
-				//glPushMatrix();
-				//theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-				//theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
-				//glPopMatrix();
-			}
-			else
-			{
-				////Display gameplay text if the victory condition isn't met.
-				//glPushMatrix();
-				//theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-				//theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
-				//theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
-				//glPopMatrix();
 			}
 
 			//Update the fp camera position to the player's position.
@@ -352,9 +334,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//If the player is not not hit, so hit, then show game over.
 		else
 		{
-			//Set destroyed message.
-			gameOverMsg = "Player destroyed.  Press Return to restart.";
-
 			//Stop the music.
 			theSoundMgr->getSnd("Theme")->stopAudio();
 
@@ -364,12 +343,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 			//Check for return key press.
 			thePlayer.checkForRestart();
-
-			//Update strings.
-			glPushMatrix();
-			theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(255.0f, 0, 0)); // uses c_str to convert string to LPCSTR
-			glPopMatrix();
 		}
 
 		//If the restart button is pressed, spawn the objects again.
@@ -377,9 +350,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		{
 			//Set the player hit status to false.
 			isPlayerHit = false;
-
-			//Clear the destroyed message.
-			gameOverMsg = "";
 
 			//Initialise the spawnAt variables
 			obstacleSpawnAt = obstacleSpawnInterval;
@@ -421,25 +391,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 		//Display text.
 		glPushMatrix();
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-		theFontMgr->getFont("SevenSeg")->printText(soundText.c_str(), FTPoint(windowWidth - 150, 35), colour3f(0, 0, 255.0f));
+		colour3f textColour = colour3f(255.0f, 255.0f, 255.0f);
+		FTPoint textTopLine =  FTPoint(10, 40);
+		FTPoint textBottomLine = FTPoint(10, 80);
+
+		theFontMgr->getFont("SevenSeg")->printText(soundText.c_str(), FTPoint(windowWidth - 200, 35), textColour);
 
 		//Display gameplay text if the victory condition isn't met.
-		if (!isPlayerHit)
+		if (!isPlayerHit && spaceUnits>0)
 		{
-			theFontMgr->getFont("SevenSeg")->printText("Avoid the obstacles and escape the asteroid field!", FTPoint(10, 35, 0.0f), colour3f(0, 0, 255.0f));
-			theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), FTPoint(10, 70, 0.0f), colour3f(0, 0, 255.0f));
+			theFontMgr->getFont("SevenSeg")->printText("Escape the asteroid field!", textTopLine, textColour);
+			theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), textBottomLine, textColour);
+		}
 
-			//If victory condition is met, display message.
-			if (spaceUnits <= 0)
-			{
-				theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(0, 255.0f, 0)); // uses c_str to convert string to LPCSTR
-			}
-		}
-		//Display game over message.
-		else
+		//Display gameover message.
+		if (isPlayerHit)
 		{
-			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), FTPoint((windowWidth / 3), windowHeight / 2, 0.0f), colour3f(255.0f, 0, 0));
+			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), textTopLine, colour3f(255.0f, 0, 0)); //Defeat dext to be red.
 		}
+
+		//If victory condition is met, display message.
+		if (spaceUnits <= 0)
+		{
+			theFontMgr->getFont("SevenSeg")->printText(victoryText.c_str(), textTopLine, colour3f(0, 255.0f, 0)); // Victory text to be green.
+		}
+
 
 		//Display 
 		glPopMatrix();

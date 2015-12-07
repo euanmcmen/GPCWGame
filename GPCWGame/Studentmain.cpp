@@ -140,8 +140,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theSoundMgr->add("Explosion", gameSounds[1]);
 
 	//Play background music.
-
 	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+
 	// Create third person camera.
 	cCamera tpvCamera;
 	tpvCamera.setTheCameraPos(glm::vec3(0.0f, 1.0f, 20.0f));
@@ -362,7 +362,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			runTime = 0;
 			
 			//Play background music.
-			theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+			if (thePlayer.checkIfShouldPlaySound())
+			{
+				theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
+			}
 
 			//Unset the flag.
 			isRestarting = false;

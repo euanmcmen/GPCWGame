@@ -90,7 +90,7 @@
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="GameConstants.cpp" />
     <ClCompile Include="Studentmain.cpp" />
-    <ClCompile Include="AsteroidAvoiderGame.cpp" />
+    <ClCompile Include="AsteroidEscapeGame.cpp" />
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +114,7 @@
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cWNDManager.h" />
     <ClInclude Include="GameConstants.h" />
-    <ClInclude Include="AsteroidAvoiderGame.h" />
+    <ClInclude Include="AsteroidEscapeGame.h" />
     <ClInclude Include="wglext.h" />
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>

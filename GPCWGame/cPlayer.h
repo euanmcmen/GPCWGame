@@ -2,7 +2,7 @@
 #define _CPLAYER_H
 
 #include "GameConstants.h"
-#include "AsteroidAvoiderGame.h"
+#include "AsteroidEscapeGame.h"
 #include "cModel.h"
 #include "cInputMgr.h"
 #include "cXBOXController.h"

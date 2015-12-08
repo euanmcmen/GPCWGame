@@ -1,5 +1,5 @@
 #include "SpaceObject.h"
-#include "AsteroidAvoiderGame.h"
+#include "AsteroidEscapeGame.h"
 
 //Constructor of obstacle.
 SpaceObject::SpaceObject() : cModel()

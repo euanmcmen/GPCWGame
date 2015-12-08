@@ -75,13 +75,13 @@
     <ClCompile Include="PlanetSphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidAvoiderGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cXBOXController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpaceObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidEscapeGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,13 +146,13 @@
     <ClInclude Include="PlanetSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidAvoiderGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cXBOXController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpaceObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidEscapeGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

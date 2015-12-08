@@ -231,137 +231,141 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
 			thePlayer.update(elapsedTime);
 
-			//If the runtime is larger than the asteroid spawn at value, spawn an Asteroid.
-			if (runTime > asteroidSpawnAt)
+			//While the game is playing
+			if (spaceUnits > 0)
 			{
-				//Spawn an Obstacle.
-				//Use & to pass a pointer to the value, rather than the value itself.
-				SpawnAsteroid(&asteroidModel);
-
-				//Increase obstacleSpawnAt
-				asteroidSpawnAt += asteroidSpawnInterval;
-			}
-
-			//If runtime is larger than the battery spawn value, spawn battery.
-			if (runTime > batterySpawnAt)
-			{
-				//Spawn a battery.
-				SpawnBattery(&batteryModel);
-
-				//Increase battery spawn at.
-				batterySpawnAt += batterySpawnInterval;
-			}
-
-			//If the runtime is larger than the tiny asteroid spawn value, spawn a tiny asteroid.
-			if (runTime > TinyAsteroidSpawnAt)
-			{
-				//Spawn asteroid
-				SpawnTinyAsteroid(&tinyAsteroidModel);
-
-				//Increment asteridspawnat
-				TinyAsteroidSpawnAt += TinyAsteroidSpawnInterval;
-			}
-
-			//If the runtime is larger the decrement space units time, decrement space units.
-			if (runTime > spaceUnitsDecAt && spaceUnits > 0)
-			{
-				//Decrement space units
-				spaceUnits -= spaceUnitsDecAmount;
-
-				//Increase space units dec at
-				spaceUnitsDecAt += spaceUnitsInterval;
-			}
-
-			//If the runtime if larger than the power decrement at time, decrement the power.
-			if (runTime > powerDecAt && shipPower > 0)
-			{
-				//Decrement power
-				shipPower -= powerDecAmount;
-
-				//Increase power dec at.
-				powerDecAt += powerDecInterval;
-			}
-
-			//Iterate over each Asteroid.
-			for (vector<SpaceObject*>::iterator asteroidIterator = theAsteroids.begin(); asteroidIterator != theAsteroids.end(); ++asteroidIterator)
-			{
-				//If the Asteroid is active...
-				if ((*asteroidIterator)->isActive())
+				//If the runtime is larger than the asteroid spawn at value, spawn an Asteroid.
+				if (runTime > asteroidSpawnAt)
 				{
-					//Update and render the asteroid..
-					asteroidModel.renderMdl((*asteroidIterator)->getPosition(), (*asteroidIterator)->getRotation(), (*asteroidIterator)->getAxis(), (*asteroidIterator)->getScale());
-					(*asteroidIterator)->update(elapsedTime);
+					//Spawn an Obstacle.
+					//Use & to pass a pointer to the value, rather than the value itself.
+					SpawnAsteroid(&asteroidModel);
 
-					//Check if player is colliding with the Asteroid.
-					if (thePlayer.SphereSphereCollision((*asteroidIterator)->getPosition(), (*asteroidIterator)->getMdlRadius()) && !isPlayerHit)
+					//Increase obstacleSpawnAt
+					asteroidSpawnAt += asteroidSpawnInterval;
+				}
+
+				//If runtime is larger than the battery spawn value, spawn battery.
+				if (runTime > batterySpawnAt)
+				{
+					//Spawn a battery.
+					SpawnBattery(&batteryModel);
+
+					//Increase battery spawn at.
+					batterySpawnAt += batterySpawnInterval;
+				}
+
+				//If the runtime is larger than the tiny asteroid spawn value, spawn a tiny asteroid.
+				if (runTime > TinyAsteroidSpawnAt)
+				{
+					//Spawn asteroid
+					SpawnTinyAsteroid(&tinyAsteroidModel);
+
+					//Increment asteridspawnat
+					TinyAsteroidSpawnAt += TinyAsteroidSpawnInterval;
+				}
+
+				//If the runtime is larger the decrement space units time, decrement space units.
+				if (runTime > spaceUnitsDecAt && spaceUnits > 0)
+				{
+					//Decrement space units
+					spaceUnits -= spaceUnitsDecAmount;
+
+					//Increase space units dec at
+					spaceUnitsDecAt += spaceUnitsInterval;
+				}
+
+				//If the runtime if larger than the power decrement at time, decrement the power.
+				if (runTime > powerDecAt && shipPower > 0)
+				{
+					//Decrement power
+					shipPower -= powerDecAmount;
+
+					//Increase power dec at.
+					powerDecAt += powerDecInterval;
+				}
+
+				//Iterate over each Asteroid.
+				for (vector<SpaceObject*>::iterator asteroidIterator = theAsteroids.begin(); asteroidIterator != theAsteroids.end(); ++asteroidIterator)
+				{
+					//If the Asteroid is active...
+					if ((*asteroidIterator)->isActive())
 					{
-						//Set player hit
-						isPlayerHit = true;
+						//Update and render the asteroid..
+						asteroidModel.renderMdl((*asteroidIterator)->getPosition(), (*asteroidIterator)->getRotation(), (*asteroidIterator)->getAxis(), (*asteroidIterator)->getScale());
+						(*asteroidIterator)->update(elapsedTime);
 
-						if (thePlayer.checkIfShouldPlaySound())
-							theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
+						//Check if player is colliding with the Asteroid.
+						if (thePlayer.SphereSphereCollision((*asteroidIterator)->getPosition(), (*asteroidIterator)->getMdlRadius()) && !isPlayerHit)
+						{
+							//Set player hit
+							isPlayerHit = true;
+
+							if (thePlayer.checkIfShouldPlaySound())
+								theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
+						}
 					}
 				}
-			}
 
-			//Iterate over each battery.
-			for (vector<SpaceObject*>::iterator batteryIter = theBatteries.begin(); batteryIter != theBatteries.end(); ++batteryIter)
-			{
-				if ((*batteryIter)->isActive())
+				//Iterate over each battery.
+				for (vector<SpaceObject*>::iterator batteryIter = theBatteries.begin(); batteryIter != theBatteries.end(); ++batteryIter)
 				{
-					batteryModel.renderMdl((*batteryIter)->getPosition(), (*batteryIter)->getRotation(), (*batteryIter)->getAxis(), (*batteryIter)->getScale());
-					(*batteryIter)->update(elapsedTime);
-
-					//Check if the player is colliding with the battery.
-					if (thePlayer.SphereSphereCollision((*batteryIter)->getPosition(), (*batteryIter)->getMdlRadius()))
+					if ((*batteryIter)->isActive())
 					{
-						//Increase power.
-						shipPower += 20;
+						batteryModel.renderMdl((*batteryIter)->getPosition(), (*batteryIter)->getRotation(), (*batteryIter)->getAxis(), (*batteryIter)->getScale());
+						(*batteryIter)->update(elapsedTime);
 
-						//Cap power at 100%.
-						if (shipPower > 100)
-							shipPower = 100;
+						//Check if the player is colliding with the battery.
+						if (thePlayer.SphereSphereCollision((*batteryIter)->getPosition(), (*batteryIter)->getMdlRadius()))
+						{
+							//Increase power.
+							shipPower += 20;
 
-						//Disable battery
-						(*batteryIter)->setIsActive(false);
+							//Cap power at 100%.
+							if (shipPower > 100)
+								shipPower = 100;
 
-						//Play battery collect sound.
-						if (thePlayer.checkIfShouldPlaySound())
-							theSoundMgr->getSnd("Powerup")->playAudio(AL_TRUE);
+							//Disable battery
+							(*batteryIter)->setIsActive(false);
+
+							//Play battery collect sound.
+							if (thePlayer.checkIfShouldPlaySound())
+								theSoundMgr->getSnd("Powerup")->playAudio(AL_TRUE);
+						}
 					}
 				}
-			}
 
-			//Iterate over each tiny asteroid.
-			for (vector<SpaceObject*>::iterator tinyasteroidIterator = theTinyAsteroids.begin(); tinyasteroidIterator != theTinyAsteroids.end(); ++tinyasteroidIterator)
-			{
-				//If the asteroid is active..
-				if ((*tinyasteroidIterator)->isActive())
+				//Iterate over each tiny asteroid.
+				for (vector<SpaceObject*>::iterator tinyasteroidIterator = theTinyAsteroids.begin(); tinyasteroidIterator != theTinyAsteroids.end(); ++tinyasteroidIterator)
 				{
+					//If the asteroid is active..
+					if ((*tinyasteroidIterator)->isActive())
 					{
-						//Update and render.
-						tinyAsteroidModel.renderMdl((*tinyasteroidIterator)->getPosition(), (*tinyasteroidIterator)->getRotation(), (*tinyasteroidIterator)->getAxis(), (*tinyasteroidIterator)->getScale());
-						(*tinyasteroidIterator)->update(elapsedTime);
+						{
+							//Update and render.
+							tinyAsteroidModel.renderMdl((*tinyasteroidIterator)->getPosition(), (*tinyasteroidIterator)->getRotation(), (*tinyasteroidIterator)->getAxis(), (*tinyasteroidIterator)->getScale());
+							(*tinyasteroidIterator)->update(elapsedTime);
+						}
 					}
 				}
+
+				//Check for victory condition.
+				if (spaceUnits <= 0)
+				{
+					//Delete all objects
+					theAsteroids.clear();
+					theTinyAsteroids.clear();
+					theBatteries.clear();
+				}
+
+				//Update the fp camera position to the player's position.
+				fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition()));
+				fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
+				fpvCamera.update();
+
+				//Increment runtime
+				runTime += elapsedTime;
 			}
-
-			//Check for victory condition.
-			if (spaceUnits <= 0)
-			{
-				//Delete all objects
-				theAsteroids.clear();
-				theTinyAsteroids.clear();
-				theBatteries.clear();
-			}
-
-			//Update the fp camera position to the player's position.
-			fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition()));
-			fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
-			fpvCamera.update();
-
-			//Increment runtime
-			runTime += elapsedTime;
 		}
 		
 		//If the player is not not hit, so hit, then show game over.

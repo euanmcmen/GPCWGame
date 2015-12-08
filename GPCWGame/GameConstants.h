@@ -3,7 +3,7 @@
 
 #define GLM_FORCE_RADIANS
 //Define the string to appear in the top left corner of the window
-#define WINDOW_TITLE "Asteroid Avoider"
+#define WINDOW_TITLE "Asteroid Escape"
 
 // Windows & OpenGL 
 #include <stdlib.h>
@@ -71,16 +71,24 @@ struct mdlDimensions{
 	float s_mdlWidth, s_mdlheight, s_mdldepth;
 };
 
+//Game stat values.
 extern bool isPlayerHit;
 extern bool isRestarting;
+
+//Active Camera index.
 extern int cameraIndex;
+
+//Sound values.
 extern bool soundEventHandled;
 extern string soundText;
-extern float translationX;
-extern float translationY;
-extern const int RIGHT_BOUND;
-extern const int LEFT_BOUND;
-extern const int TOP_BOUND;
-extern const int BOTTOM_BOUND;
+
+//Player energy.
+extern int shipPower;
+
+//Screen bounds.
+extern const float RIGHT_BOUND;
+extern const float LEFT_BOUND;
+extern const float TOP_BOUND;
+extern const float BOTTOM_BOUND;
 
 #endif

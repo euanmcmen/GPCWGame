@@ -19,13 +19,13 @@
 #include "cModelLoader.h"
 #include "cModel.h"
 #include "cPlayer.h"
-#include "Obstacle.h"
+#include "SpaceObject.h"
 #include "PlanetSphere.h"
-#include "TinyAsteroid.h"
 
 //Forward declare methods.
-void SpawnObstacle(cModelLoader* obstacleLoader, glm::vec3 scale, int type);
+void SpawnAsteroid(cModelLoader* asteroidLoader);
 void SpawnTinyAsteroid(cModelLoader* tinyAsteroidModel);
+void SpawnBattery(cModelLoader* batteryModel);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, int cmdShow)
 {
@@ -83,17 +83,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	thePlayer.attachInputMgr(theInputMgr);
 	thePlayer.setUpXboxController();
 
-	//Obstacle type 0
-	cTexture standardObstacleTexture;
-	standardObstacleTexture.createTexture("Models/Asteroid/asteroid.jpg");
-	cModelLoader standardObstacleModel;
-	standardObstacleModel.loadModel("Models/Asteroid/asteroid.obj", standardObstacleTexture);
+	//Asteroid model
+	cTexture asteroidTexture;
+	asteroidTexture.createTexture("Models/Asteroid/asteroid.jpg");
+	cModelLoader asteroidModel;
+	asteroidModel.loadModel("Models/Asteroid/asteroid.obj", asteroidTexture);
 
-	//Obstacle type 1
-	cTexture altObstacleTexture;
-	altObstacleTexture.createTexture("Models/Satellite/texture.jpg");
-	cModelLoader altObstacleModel;
-	altObstacleModel.loadModel("Models/Satellite/Satellite.obj", altObstacleTexture);
+	//Battery model
+	cTexture batteryTexture;
+	batteryTexture.createTexture("Models/PowerPickup/Texture2.jpg");
+	cModelLoader batteryModel;
+	batteryModel.loadModel("Models/PowerPickup/PowerPickup.obj", batteryTexture);
 
 	//Tiny asteroids
 	cTexture tinyAsteroidTexture;
@@ -130,14 +130,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	// Load Fonts
 	LPCSTR gameFonts[1] = {"Fonts/digital-7.ttf"};
 
-	theFontMgr->addFont("SevenSeg", gameFonts[0], 36);
+	theFontMgr->addFont("SevenSeg", gameFonts[0], 28);
 
 	// load game sounds
 	// Load Sound
-	LPCSTR gameSounds[3] = { "Audio/bgm.wav", "Audio/explosion.wav" };
+	LPCSTR gameSounds[3] = { "Audio/bgm.wav", "Audio/explosion.wav", "Audio/powerup.wav" };
 
 	theSoundMgr->add("Theme", gameSounds[0]);
 	theSoundMgr->add("Explosion", gameSounds[1]);
+	theSoundMgr->add("Powerup", gameSounds[2]);
 
 	//Play background music.
 	theSoundMgr->getSnd("Theme")->playAudio(AL_LOOPING);
@@ -153,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 
 	// Create first person camera.
 	cCamera fpvCamera;
-	fpvCamera.setTheCameraPos(thePlayer.getPosition() + glm::vec3(0, 0, -2));
+	fpvCamera.setTheCameraPos(thePlayer.getPosition());
 	fpvCamera.setTheCameraLookAt(glm::vec3(0.0f, 0.0f, -60.0f));
 	fpvCamera.setTheCameraUpVector(glm::vec3(0.0f, 1.0f, 0.0f)); // pointing upwards in world space
 	fpvCamera.setTheCameraAspectRatio(windowWidth, windowHeight);
@@ -164,28 +165,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
 
 	//Set Obstacle spawn values.
-	float obstacleSpawnInterval = 0.4f;
-	float obstacleSpawnAt = 1.0f;
-	int obstacleIndex = 0;
+	float asteroidSpawnInterval = 0.4f;
+	float asteroidSpawnAt = 1.0f;
+
+	//Set Obstacle spawn values.
+	int batterySpawnInterval = 5;
+	int batterySpawnAt = 5;
 
 	//Set tiny asteroid spawn values.
-	float asteroidSpawnInterval = 0.1f;
-	float asteroidSpawnAt = 0.0f;
+	float TinyAsteroidSpawnInterval = 0.1f;
+	float TinyAsteroidSpawnAt = 0.0f;
+
+	//Set the ship power decrement values
+	//The ship power drecrements by 10 every 5 seconds, giving 50 seconds of power.
+	int powerDecAt = 5;
+	int powerDecInterval = 5;
+	int powerDecAmount = 10;
 
 	//Set the space unit countdown values.
 	//SpaceUnits counts down in steps of 100, and is Displayed to the player.
+	//The game is designed to last 100 seconds.
 	int spaceUnits = 10000;  
-	int spaceUnitsDecAt = 2;
+	int spaceUnitsDecAt = 1;
 	int spaceUnitsInterval = 1;
-	int spaceUnitsDecrement = 100;
+	int spaceUnitsDecAmount = 100;
 
 	//variable to control the spawning of the objects.  Not displayed to the player.
 	float runTime = 0.0f;  
-	
-	//String messages to display to the player.
-	string spaceUnitsMsg;
-	string gameOverMsg = "Player destroyed.  Press Return to restart.";
-	string victoryText = "You have escaped the asteroid field!";
 
    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
@@ -225,61 +231,69 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			playerModel.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getAxis(), thePlayer.getScale());
 			thePlayer.update(elapsedTime);
 
-			//If the elapsed time is larger than the Obstaclespawnat value, spawn an Obstacle.
-			if (runTime > obstacleSpawnAt)
+			//If the runtime is larger than the asteroid spawn at value, spawn an Asteroid.
+			if (runTime > asteroidSpawnAt)
 			{
 				//Spawn an Obstacle.
 				//Use & to pass a pointer to the value, rather than the value itself.
-				SpawnObstacle(&standardObstacleModel, glm::vec3(2, 2, 2), 0);
-
-				//Increment Obstacle spawn index.
-				obstacleIndex++;
-
-				//If Obstacle index is divisable by 5, spawn an alt Obstacle.
-				if (obstacleIndex % 5 == 0)
-					SpawnObstacle(&altObstacleModel, glm::vec3(1, 1, 1), 1);
+				SpawnAsteroid(&asteroidModel);
 
 				//Increase obstacleSpawnAt
-				obstacleSpawnAt += obstacleSpawnInterval;
+				asteroidSpawnAt += asteroidSpawnInterval;
 			}
 
-			//If the elapsed time is larger than the asteroidspawnat value, spawn an asteroid.
-			if (runTime > asteroidSpawnAt)
+			//If runtime is larger than the battery spawn value, spawn battery.
+			if (runTime > batterySpawnAt)
+			{
+				//Spawn a battery.
+				SpawnBattery(&batteryModel);
+
+				//Increase battery spawn at.
+				batterySpawnAt += batterySpawnInterval;
+			}
+
+			//If the runtime is larger than the tiny asteroid spawn value, spawn a tiny asteroid.
+			if (runTime > TinyAsteroidSpawnAt)
 			{
 				//Spawn asteroid
 				SpawnTinyAsteroid(&tinyAsteroidModel);
 
 				//Increment asteridspawnat
-				asteroidSpawnAt += asteroidSpawnInterval;
+				TinyAsteroidSpawnAt += TinyAsteroidSpawnInterval;
 			}
 
-			//If the runtime is at or the decrement time, decrement.
+			//If the runtime is larger the decrement space units time, decrement space units.
 			if (runTime > spaceUnitsDecAt && spaceUnits > 0)
 			{
 				//Decrement space units
-				spaceUnits -= spaceUnitsDecrement;
+				spaceUnits -= spaceUnitsDecAmount;
 
-				//Increase decat
+				//Increase space units dec at
 				spaceUnitsDecAt += spaceUnitsInterval;
 			}
 
-			//Iterate over each Obstacle.
-			for (vector<Obstacle*>::iterator obstacleIterator = theObstacles.begin(); obstacleIterator != theObstacles.end(); ++obstacleIterator)
+			//If the runtime if larger than the power decrement at time, decrement the power.
+			if (runTime > powerDecAt && shipPower > 0)
 			{
-				//If the obstacle is active...
-				if ((*obstacleIterator)->isActive())
-				{
-					//Render Obstacle based on type.
-					if ((*obstacleIterator)->getType() == 0)
-						standardObstacleModel.renderMdl((*obstacleIterator)->getPosition(), (*obstacleIterator)->getRotation(), (*obstacleIterator)->getAxis(), (*obstacleIterator)->getScale());
-					else if ((*obstacleIterator)->getType() == 1)
-						altObstacleModel.renderMdl((*obstacleIterator)->getPosition(), (*obstacleIterator)->getRotation(), (*obstacleIterator)->getAxis(), (*obstacleIterator)->getScale());
-					
-					//Update the Obstacle.
-					(*obstacleIterator)->update(elapsedTime);
+				//Decrement power
+				shipPower -= powerDecAmount;
 
-					//Check if player is colliding with the player.
-					if (thePlayer.SphereSphereCollision((*obstacleIterator)->getPosition(), (*obstacleIterator)->getMdlRadius()) && !isPlayerHit)
+				//Increase power dec at.
+				powerDecAt += powerDecInterval;
+			}
+
+			//Iterate over each Asteroid.
+			for (vector<SpaceObject*>::iterator asteroidIterator = theAsteroids.begin(); asteroidIterator != theAsteroids.end(); ++asteroidIterator)
+			{
+				//If the Asteroid is active...
+				if ((*asteroidIterator)->isActive())
+				{
+					//Update and render the asteroid..
+					asteroidModel.renderMdl((*asteroidIterator)->getPosition(), (*asteroidIterator)->getRotation(), (*asteroidIterator)->getAxis(), (*asteroidIterator)->getScale());
+					(*asteroidIterator)->update(elapsedTime);
+
+					//Check if player is colliding with the Asteroid.
+					if (thePlayer.SphereSphereCollision((*asteroidIterator)->getPosition(), (*asteroidIterator)->getMdlRadius()) && !isPlayerHit)
 					{
 						//Set player hit
 						isPlayerHit = true;
@@ -287,33 +301,47 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 						if (thePlayer.checkIfShouldPlaySound())
 							theSoundMgr->getSnd("Explosion")->playAudio(AL_TRUE);
 					}
+				}
+			}
 
-					//If the Obstacle goes into the killzone, set it to inactive.
-					if ((*obstacleIterator)->isInKillzone())
+			//Iterate over each battery.
+			for (vector<SpaceObject*>::iterator batteryIter = theBatteries.begin(); batteryIter != theBatteries.end(); ++batteryIter)
+			{
+				if ((*batteryIter)->isActive())
+				{
+					batteryModel.renderMdl((*batteryIter)->getPosition(), (*batteryIter)->getRotation(), (*batteryIter)->getAxis(), (*batteryIter)->getScale());
+					(*batteryIter)->update(elapsedTime);
+
+					//Check if the player is colliding with the battery.
+					if (thePlayer.SphereSphereCollision((*batteryIter)->getPosition(), (*batteryIter)->getMdlRadius()))
 					{
-						//Disable the Obstacle so it isn't rendererd or updated.
-						(*obstacleIterator)->setIsActive(false);
+						//Increase power.
+						shipPower += 20;
+
+						//Cap power at 100%.
+						if (shipPower > 100)
+							shipPower = 100;
+
+						//Disable battery
+						(*batteryIter)->setIsActive(false);
+
+						//Play battery collect sound.
+						if (thePlayer.checkIfShouldPlaySound())
+							theSoundMgr->getSnd("Powerup")->playAudio(AL_TRUE);
 					}
 				}
 			}
 
 			//Iterate over each tiny asteroid.
-			for (vector<TinyAsteroid*>::iterator tinyAsteroidIterator = theTinyAsteroids.begin(); tinyAsteroidIterator != theTinyAsteroids.end(); ++tinyAsteroidIterator)
+			for (vector<SpaceObject*>::iterator tinyasteroidIterator = theTinyAsteroids.begin(); tinyasteroidIterator != theTinyAsteroids.end(); ++tinyasteroidIterator)
 			{
 				//If the asteroid is active..
-				if ((*tinyAsteroidIterator)->isActive())
+				if ((*tinyasteroidIterator)->isActive())
 				{
 					{
 						//Update and render.
-						tinyAsteroidModel.renderMdl((*tinyAsteroidIterator)->getPosition(), (*tinyAsteroidIterator)->getRotation(), (*tinyAsteroidIterator)->getAxis(), (*tinyAsteroidIterator)->getScale());
-						(*tinyAsteroidIterator)->update(elapsedTime);
-					}
-
-					//If the asteroid goes into the killzone, set it to inactive.
-					if ((*tinyAsteroidIterator)->isInKillzone())
-					{
-						//Disable the asteroid so it isn't rendered or updated.
-						(*tinyAsteroidIterator)->setIsActive(false);
+						tinyAsteroidModel.renderMdl((*tinyasteroidIterator)->getPosition(), (*tinyasteroidIterator)->getRotation(), (*tinyasteroidIterator)->getAxis(), (*tinyasteroidIterator)->getScale());
+						(*tinyasteroidIterator)->update(elapsedTime);
 					}
 				}
 			}
@@ -322,12 +350,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			if (spaceUnits <= 0)
 			{
 				//Delete all objects
-				theObstacles.clear();
+				theAsteroids.clear();
 				theTinyAsteroids.clear();
+				theBatteries.clear();
 			}
 
 			//Update the fp camera position to the player's position.
-			fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y + 0.5f, 2.0f));
+			fpvCamera.setTheCameraPos(glm::vec3(thePlayer.getPosition()));
 			fpvCamera.setTheCameraLookAt(glm::vec3(thePlayer.getPosition().x, thePlayer.getPosition().y, -60));
 			fpvCamera.update();
 
@@ -342,8 +371,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			theSoundMgr->getSnd("Theme")->stopAudio();
 
 			//Delete all objects
-			theObstacles.clear();
+			theAsteroids.clear();
 			theTinyAsteroids.clear();
+			theBatteries.clear();
 
 			//Check for return key press.
 			thePlayer.checkForRestart();
@@ -356,14 +386,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isPlayerHit = false;
 
 			//Initialise the spawnAt variables
-			obstacleSpawnAt = obstacleSpawnInterval;
 			asteroidSpawnAt = asteroidSpawnInterval;
-			spaceUnitsDecAt = 2;
+			TinyAsteroidSpawnAt = TinyAsteroidSpawnInterval;
+			batterySpawnAt = batterySpawnInterval;
+			spaceUnitsDecAt = spaceUnitsInterval;
+			powerDecAt = powerDecInterval;
 
 			//Reset counters
-			obstacleIndex = 0;
 			spaceUnits = 10000;
 			runTime = 0;
+			shipPower = 100;
 			
 			//Play background music.
 			if (thePlayer.checkIfShouldPlaySound())
@@ -375,11 +407,57 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			isRestarting = false;
 		}
 
-		//Check for window closing event.
-		if (thePlayer.checkForExit())
+		//Display text.
+		glPushMatrix();
+		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
+
+		//String messages to display to the player.
+		string spaceUnitsMsg;
+		string shipPowerMsg;
+		string quitMsg = "Press Escape/Back to quit";
+		string gameOverMsg = "Player destroyed.  Press Return/Start to restart.";
+		string victoryText = "You have escaped the asteroid field!";
+
+		//Set up text colours
+		colour3f whiteTextColour = colour3f(255.0f, 255.0f, 255.0f);
+		colour3f redTextColour = colour3f(255.0f, 0, 0);
+		colour3f greenTextColour = colour3f(0, 255.0f, 0);
+
+		//Set up text positions.
+		FTPoint soundTextLine = FTPoint(windowWidth - 150, 40);
+		FTPoint textLine1 = FTPoint(10, windowHeight-70);
+		FTPoint textLine2 = FTPoint(10, windowHeight - 40);
+		
+		//Display sound text in its own area of the screen.
+		theFontMgr->getFont("SevenSeg")->printText(soundText.c_str(), soundTextLine, whiteTextColour);
+
+		//Display gameplay text if the victory condition isn't met.
+		if (!isPlayerHit && spaceUnits>0)
 		{
-			DestroyWindow(pgmWNDMgr->getWNDHandle());
+			//Display the distance to the end of the asteroid field.
+			theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), textLine1, whiteTextColour);
+
+			//Check if the ship has power.
+			if (shipPower > 0)
+				theFontMgr->getFont("SevenSeg")->printText(("Remaining ship power: " + to_string(shipPower) + "%").c_str(), textLine2, whiteTextColour);
+			else 
+				theFontMgr->getFont("SevenSeg")->printText("No power!  Controls offline.", textLine2, redTextColour);
 		}
+
+		//Display gameover message.
+		if (isPlayerHit)
+		{
+			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), textLine1, redTextColour); //Defeat text to be red.
+			theFontMgr->getFont("SevenSeg")->printText(quitMsg.c_str(), textLine2, redTextColour); 
+		}
+
+		//If victory condition is met, display message.
+		if (spaceUnits <= 0)
+		{
+			theFontMgr->getFont("SevenSeg")->printText(victoryText.c_str(), textLine1, greenTextColour); // Victory text to be green.
+			theFontMgr->getFont("SevenSeg")->printText(quitMsg.c_str(), textLine2, greenTextColour);
+		}
+		glPopMatrix();
 
 		//Check for sound toggle event.
 		if (thePlayer.checkIfShouldPlaySound() && !soundEventHandled)
@@ -395,37 +473,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 			soundEventHandled = true;
 		}
 
-		//Display text.
-		glPushMatrix();
-		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
-		colour3f textColour = colour3f(255.0f, 255.0f, 255.0f);
-		FTPoint textTopLine =  FTPoint(10, 40);
-		FTPoint textBottomLine = FTPoint(10, 80);
-
-		theFontMgr->getFont("SevenSeg")->printText(soundText.c_str(), FTPoint(windowWidth - 200, 35), textColour);
-
-		//Display gameplay text if the victory condition isn't met.
-		if (!isPlayerHit && spaceUnits>0)
+		//Check for window closing event.
+		if (thePlayer.checkForExit())
 		{
-			theFontMgr->getFont("SevenSeg")->printText("Escape the asteroid field!", textTopLine, textColour);
-			theFontMgr->getFont("SevenSeg")->printText(("Distance remaining to exit: " + to_string(spaceUnits) + " space units.").c_str(), textBottomLine, textColour);
+			DestroyWindow(pgmWNDMgr->getWNDHandle());
 		}
-
-		//Display gameover message.
-		if (isPlayerHit)
-		{
-			theFontMgr->getFont("SevenSeg")->printText(gameOverMsg.c_str(), textTopLine, colour3f(255.0f, 0, 0)); //Defeat dext to be red.
-		}
-
-		//If victory condition is met, display message.
-		if (spaceUnits <= 0)
-		{
-			theFontMgr->getFont("SevenSeg")->printText(victoryText.c_str(), textTopLine, colour3f(0, 255.0f, 0)); // Victory text to be green.
-		}
-
-
-		//Display 
-		glPopMatrix();
 
 		pgmWNDMgr->swapBuffers();
 
@@ -440,14 +492,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 }
 
 //Spawns an Obstacle which flys past the player - hopefully.
-void SpawnObstacle(cModelLoader* ObstacleLoader, glm::vec3 scale, int type)
+void SpawnAsteroid(cModelLoader* asteroidLoader)
 {
-	//Create new obstacle.
-	theObstacles.push_back(new Obstacle);
+	//Create new Asteroid.
+	theAsteroids.push_back(new SpaceObject);
 
-	//Get the reference of this new obstacle.  It'll be at the back of the vector.
-	theObstacles.back()->initialise(scale, type);
-	theObstacles.back()->setMdlDimensions(ObstacleLoader->getModelDimensions());
+	//Get the reference of this new Asteroid.  It'll be at the back of the vector.
+	theAsteroids.back()->initialise(1, glm::vec3(2, 2, 2), 20.0f, true);
+
+	//Set the asteroid's collision sphere dimensions
+	theAsteroids.back()->setMdlDimensions(asteroidLoader->getModelDimensions());
+
+	return;
+}
+
+void SpawnBattery(cModelLoader* batteryLoader)
+{
+	//Create new battery.
+	theBatteries.push_back(new SpaceObject);
+
+	//Get the reference of this new battery.  It'll be at the back of the vector.
+	theBatteries.back()->initialise(0.5f, glm::vec3(1, 1, 1), 20.0f, false);
+
+	//Set the batteryLoader's collision sphere dimensions
+	theAsteroids.back()->setMdlDimensions(batteryLoader->getModelDimensions());
 
 	return;
 }
@@ -456,10 +524,10 @@ void SpawnObstacle(cModelLoader* ObstacleLoader, glm::vec3 scale, int type)
 void SpawnTinyAsteroid(cModelLoader* tinyAsteroidModel)
 {
 	//Create new tiny asteroid.
-	theTinyAsteroids.push_back(new TinyAsteroid);
+	theTinyAsteroids.push_back(new SpaceObject);
 
 	//Get the reference of this new tiny asteroid.  It'll be at the back of the vector. 
-	theTinyAsteroids.back()->initialise(glm::vec3(1, 1, 1));
+	theTinyAsteroids.back()->initialise(2, glm::vec3(1, 1, 1), 75.0f, false);
 
 	return;
 }

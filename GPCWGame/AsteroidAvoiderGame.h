@@ -1,10 +1,10 @@
 #ifndef _ASTEROIDAVOIDERGAME_H
 #define _ASTEROIDAVOIDERGAME_H
 
-#include "Obstacle.h"
-#include "TinyAsteroid.h"
+#include "SpaceObject.h"
 
-extern vector<Obstacle*> theObstacles;
-extern vector<TinyAsteroid*> theTinyAsteroids;
+extern vector<SpaceObject*> theAsteroids;
+extern vector<SpaceObject*> theTinyAsteroids;
+extern vector<SpaceObject*> theBatteries;
 
 #endif

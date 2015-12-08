@@ -38,30 +38,33 @@ void cPlayer::setUpXboxController()
 //Updates the player.
 void cPlayer::update(float elapsedTime)
 {
-	//Check for movement through arrow keys
-	//Only allow movement if the player is within the bounds of the screen.
-	if (m_InputMgr->isKeyDown(VK_RIGHT))
+	if (shipPower > 0)
 	{
-		if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
-			translationX = 1.0f;
-	}
+		//Check for movement through arrow keys
+		//Only allow movement if the player is within the bounds of the screen.
+		if (m_InputMgr->isKeyDown(VK_RIGHT))
+		{
+			if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
+				translationX = 1.0f;
+		}
 
-	if (m_InputMgr->isKeyDown(VK_LEFT))
-	{
-		if (m_mdlPosition.x >= (LEFT_BOUND + 7))
-			translationX = -1.0f;
-	}
+		if (m_InputMgr->isKeyDown(VK_LEFT))
+		{
+			if (m_mdlPosition.x >= (LEFT_BOUND + 7))
+				translationX = -1.0f;
+		}
 
-	if (m_InputMgr->isKeyDown(VK_UP))
-	{
-		if (m_mdlPosition.y <= (TOP_BOUND - 2))
-			translationY = 1;
-	}
+		if (m_InputMgr->isKeyDown(VK_UP))
+		{
+			if (m_mdlPosition.y <= (TOP_BOUND - 2))
+				translationY = 1;
+		}
 
-	if (m_InputMgr->isKeyDown(VK_DOWN))
-	{
-		if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
-			translationY = -1;
+		if (m_InputMgr->isKeyDown(VK_DOWN))
+		{
+			if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
+				translationY = -1;
+		}
 	}
 
 	//Change the camera.
@@ -95,28 +98,31 @@ void cPlayer::update(float elapsedTime)
 	//Check for input from the controller.
 	if (controller.IsConnected())
 	{
-		if (controller.GetState().Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)
+		if (shipPower > 0)
 		{
-			if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
-				translationX = 0.5f;
-		}
+			if (controller.GetState().Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)
+			{
+				if (m_mdlPosition.x <= (RIGHT_BOUND - 7))
+					translationX = 0.5f;
+			}
 
-		if (controller.GetState().Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)
-		{
-			if (m_mdlPosition.x >= (LEFT_BOUND + 7))
-				translationX = -0.5f;
-		}
+			if (controller.GetState().Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)
+			{
+				if (m_mdlPosition.x >= (LEFT_BOUND + 7))
+					translationX = -0.5f;
+			}
 
-		if (controller.GetState().Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)
-		{
-			if (m_mdlPosition.y <= (TOP_BOUND - 2))
-				translationY = 0.5f;
-		}
+			if (controller.GetState().Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)
+			{
+				if (m_mdlPosition.y <= (TOP_BOUND - 2))
+					translationY = 0.5f;
+			}
 
-		if (controller.GetState().Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)
-		{
-			if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
-				translationY = -0.5f;
+			if (controller.GetState().Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || controller.GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)
+			{
+				if (m_mdlPosition.y >= BOTTOM_BOUND + 2)
+					translationY = -0.5f;
+			}
 		}
 
 		//Change the camera with the controller.

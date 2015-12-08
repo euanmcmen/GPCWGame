@@ -15,10 +15,16 @@ int cameraIndex = 0;
 
 //Boolean to determine whether the sound toggle event has been handled.
 bool soundEventHandled = true;
+
+//Camera text.
 string soundText = "Sound: [ON]";
 
-//Window borders.
-const int TOP_BOUND = 7;
-const int BOTTOM_BOUND = -7;
-const int RIGHT_BOUND = 15;
-const int LEFT_BOUND = -15;
+//Player energy.
+int shipPower = 100;
+
+//Window borders
+//Set to float so they can be multiplied by a float.
+const float TOP_BOUND = 7;
+const float BOTTOM_BOUND = -7;
+const float RIGHT_BOUND = 15;
+const float LEFT_BOUND = -15;

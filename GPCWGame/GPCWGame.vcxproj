@@ -70,10 +70,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cXBOXController.cpp" />
-    <ClCompile Include="TinyAsteroid.cpp" />
     <ClCompile Include="PlanetSphere.cpp" />
     <ClCompile Include="cCamera.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="SpaceObject.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cFontMgr.cpp" />
     <ClCompile Include="cInputMgr.cpp" />
@@ -96,10 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cXBOXController.h" />
-    <ClInclude Include="TinyAsteroid.h" />
     <ClInclude Include="PlanetSphere.h" />
     <ClInclude Include="cCamera.h" />
-    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="SpaceObject.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cFontMgr.h" />
     <ClInclude Include="cInputMgr.h" />

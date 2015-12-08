@@ -6,8 +6,11 @@ AsteroidAvoiderGame.cpp
 
 #include "AsteroidAvoiderGame.h"
 
-//The collection of obstacles which the player should avoid.
-vector<Obstacle*> theObstacles;
+//The collection of asterpids which the player should avoid.
+vector<SpaceObject*> theAsteroids;
 
 //Collection of thematically pleasing asteriods.
-vector<TinyAsteroid*> theTinyAsteroids;
+vector<SpaceObject*> theTinyAsteroids;
+
+//Collection of batteries for the player to collect.
+vector<SpaceObject*> theBatteries;
